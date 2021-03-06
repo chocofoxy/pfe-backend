@@ -11,7 +11,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
   
   async create(createUserInput: CreateUserInput) {
-    return await this.UserModel.create(CreateUserInput)
+    return await new this.UserModel(createUserInput).save()
   }
 
   async findAll(): Promise<User[]> {

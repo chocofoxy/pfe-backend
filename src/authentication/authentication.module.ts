@@ -5,8 +5,8 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthenticationService } from './authentication.service';
 import { jwtConstants } from './constant';
 import { LocalStrategy } from './local.strategy';
-import { AuthenticationResolver } from './authentication/authentication.resolver';
 import { AuthenticationResolver } from './authentication.resolver';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { AuthenticationResolver } from './authentication.resolver';
       signOptions: { expiresIn: '60s' },
     })
   ],
-  providers: [AuthenticationService,LocalStrategy, AuthenticationResolver],
+  providers: [AuthenticationService,LocalStrategy,JwtStrategy,AuthenticationResolver],
   exports: [AuthenticationService, JwtModule],
 })
 export class AuthenticationModule {}
