@@ -13,8 +13,8 @@ export class AuthenticationResolver {
   constructor(private authService: AuthenticationService, private usersService: UsersService){}
 
   @Mutation(() => String,{ nullable: true })
-  login(@Args('authInfo') authInfo: AuthInfo) {
-    return this.authService.validateUser(authInfo.email,authInfo.password);
+  async login(@Args('authInfo') authInfo: AuthInfo) {
+    return this.authService.validate(authInfo.email,authInfo.password);
   }
 
   @Mutation(() => User)
