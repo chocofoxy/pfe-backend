@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId, Types } from 'mongoose';
 
 @Schema()
 @ObjectType()
@@ -24,6 +24,10 @@ export class User extends Document {
   @Field(() => Int)
   @Prop()
   tel: number;
+
+  @Field(() => Int)
+  @Prop({ type: Types.ObjectId /*, ref:*/ })
+  profile: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

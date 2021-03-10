@@ -1,8 +1,8 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { Public } from 'src/guards/public.decorator';
-import { CreateUserInput } from 'src/users/dto/create-user.input';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
+import { User } from 'src/user/entities/user.entity';
+import { UsersService } from 'src/user/users.service';
 import { AuthenticationService } from './authentication.service';
 import { AuthInfo } from './login-user.input';
 
