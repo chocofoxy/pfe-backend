@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateStoreInput } from './dto/create-store.input';
 import { UpdateStoreInput } from './dto/update-store.input';
+import { Store } from './entities/store.entity';
 
 @Injectable()
 export class StoreService {
-  create(createStoreInput: CreateStoreInput) {
-    return 'This action adds a new store';
+
+  constructor(@InjectModel(Store.name) private StoreModel: Model<Store>) {}
+  
+  async create(createStoreInput: CreateStoreInput) {
+    return await new this.StoreModel(createStoreInput).save()
   }
 
-  findAll() {
-    return `This action returns all store`;
+  async findAll(): Promise<Store[]> {
+    return await this.StoreModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} store`;
+  async findOne(id: string): Promise<Store> {
+    return await this.StoreModel.findOne({ id: id })
   }
 
-  update(id: number, updateStoreInput: UpdateStoreInput) {
-    return `This action updates a #${id} store`;
+  async update(id: string, updateStoreInput: UpdateStoreInput): Promise<Store> {
+    return await this.StoreModel.findOneAndUpdate({ id: id },UpdateStoreInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} store`;
+  async remove(id: string): Promise<Store> {
+    return await this.StoreModel.findOneAndRemove({ id: id })
   }
 }

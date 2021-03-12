@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateClientInput } from './dto/create-client.input';
 import { UpdateClientInput } from './dto/update-client.input';
+import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientService {
-  create(createClientInput: CreateClientInput) {
-    return 'This action adds a new client';
+  constructor(@InjectModel(Client.name) private ClientModel: Model<Client>) {}
+  
+  async create(createClientInput: CreateClientInput) {
+    return await new this.ClientModel(createClientInput).save()
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async findAll(): Promise<Client[]> {
+    return await this.ClientModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: string): Promise<Client> {
+    return await this.ClientModel.findOne({ id: id })
   }
 
-  update(id: number, updateClientInput: UpdateClientInput) {
-    return `This action updates a #${id} client`;
+  async update(id: string, updateClientInput: UpdateClientInput): Promise<Client> {
+    return await this.ClientModel.findOneAndUpdate({ id: id },UpdateClientInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: string): Promise<Client> {
+    return await this.ClientModel.findOneAndRemove({ email: email })
   }
 }

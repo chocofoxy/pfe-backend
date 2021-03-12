@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryInput: CreateCategoryInput) {
-    return 'This action adds a new category';
+  constructor(@InjectModel(Category.name) private CategoryModel: Model<Category>) {}
+  
+  async create(createCategoryInput: CreateCategoryInput) {
+    return await new this.CategoryModel(createCategoryInput).save()
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll(): Promise<Category[]> {
+    return await this.CategoryModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string): Promise<Category> {
+    return await this.CategoryModel.findOne({ id: id })
   }
 
-  update(id: number, updateCategoryInput: UpdateCategoryInput) {
-    return `This action updates a #${id} category`;
+  async update(id: string, updateCategoryInput: UpdateCategoryInput): Promise<Category> {
+    return await this.CategoryModel.findOneAndUpdate({ id: id },UpdateCategoryInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string): Promise<Category> {
+    return await this.CategoryModel.findOneAndRemove({ id: id })
   }
 }

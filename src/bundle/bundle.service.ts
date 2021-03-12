@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateBundleInput } from './dto/create-bundle.input';
 import { UpdateBundleInput } from './dto/update-bundle.input';
+import { Bundle } from './entities/bundle.entity';
 
 @Injectable()
 export class BundleService {
-  create(createBundleInput: CreateBundleInput) {
-    return 'This action adds a new bundle';
+  constructor(@InjectModel(Bundle.name) private BundleModel: Model<Bundle>) {}
+  
+  async create(createBundleInput: CreateBundleInput) {
+    return await new this.BundleModel(createBundleInput).save()
   }
 
-  findAll() {
-    return `This action returns all bundle`;
+  async findAll(): Promise<Bundle[]> {
+    return await this.BundleModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} bundle`;
+  async findOne(id: string): Promise<Bundle> {
+    return await this.BundleModel.findOne({ id: id })
   }
 
-  update(id: number, updateBundleInput: UpdateBundleInput) {
-    return `This action updates a #${id} bundle`;
+  async update(id: string, updateBundleInput: UpdateBundleInput): Promise<Bundle> {
+    return await this.BundleModel.findOneAndUpdate({ id: id },UpdateBundleInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bundle`;
+  async remove(id: string): Promise<Bundle> {
+    return await this.BundleModel.findOneAndRemove({ id: id })
   }
 }

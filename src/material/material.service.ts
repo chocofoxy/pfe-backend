@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateMaterialInput } from './dto/create-material.input';
 import { UpdateMaterialInput } from './dto/update-material.input';
+import { Material } from './entities/material.entity';
 
 @Injectable()
 export class MaterialService {
-  create(createMaterialInput: CreateMaterialInput) {
-    return 'This action adds a new material';
+  constructor(@InjectModel(Material.name) private MaterialModel: Model<Material>) {}
+  
+  async create(createMaterialInput: CreateMaterialInput) {
+    return await new this.MaterialModel(createMaterialInput).save()
   }
 
-  findAll() {
-    return `This action returns all material`;
+  async findAll(): Promise<Material[]> {
+    return await this.MaterialModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} material`;
+  async findOne(id: string): Promise<Material> {
+    return await this.MaterialModel.findOne({ id: id })
   }
 
-  update(id: number, updateMaterialInput: UpdateMaterialInput) {
-    return `This action updates a #${id} material`;
+  async update(id: string, updateMaterialInput: UpdateMaterialInput): Promise<Material> {
+    return await this.MaterialModel.findOneAndUpdate({ id: id },UpdateMaterialInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} material`;
+  async remove(id: string): Promise<Material> {
+    return await this.MaterialModel.findOneAndRemove({ id: id })
   }
 }

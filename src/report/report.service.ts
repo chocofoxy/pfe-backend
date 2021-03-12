@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateReportInput } from './dto/create-report.input';
 import { UpdateReportInput } from './dto/update-report.input';
+import { Report } from './entities/report.entity';
 
 @Injectable()
 export class ReportService {
-  create(createReportInput: CreateReportInput) {
-    return 'This action adds a new report';
+  constructor(@InjectModel(Report.name) private ReportModel: Model<Report>) {}
+  
+  async create(createReportInput: CreateReportInput) {
+    return await new this.ReportModel(createReportInput).save()
   }
 
-  findAll() {
-    return `This action returns all report`;
+  async findAll(): Promise<Report[]> {
+    return await this.ReportModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
+  async findOne(id: string): Promise<Report> {
+    return await this.ReportModel.findOne({ id: id })
   }
 
-  update(id: number, updateReportInput: UpdateReportInput) {
-    return `This action updates a #${id} report`;
+  async update(id: string, updateReportInput: UpdateReportInput): Promise<Report> {
+    return await this.ReportModel.findOneAndUpdate({ id: id },UpdateReportInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async remove(id: string): Promise<Report> {
+    return await this.ReportModel.findOneAndRemove({ id: id })
   }
 }

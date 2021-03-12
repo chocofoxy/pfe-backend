@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateReviewInput } from './dto/create-review.input';
 import { UpdateReviewInput } from './dto/update-review.input';
+import { Review } from './entities/review.entity';
 
 @Injectable()
 export class ReviewService {
-  create(createReviewInput: CreateReviewInput) {
-    return 'This action adds a new review';
+  constructor(@InjectModel(Review.name) private ReviewModel: Model<Review>) {}
+  
+  async create(createReviewInput: CreateReviewInput) {
+    return await new this.ReviewModel(createReviewInput).save()
   }
 
-  findAll() {
-    return `This action returns all review`;
+  async findAll(): Promise<Review[]> {
+    return await this.ReviewModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} review`;
+  async findOne(id: string): Promise<Review> {
+    return await this.ReviewModel.findOne({ id: id })
   }
 
-  update(id: number, updateReviewInput: UpdateReviewInput) {
-    return `This action updates a #${id} review`;
+  async update(id: string, updateReviewInput: UpdateReviewInput): Promise<Review> {
+    return await this.ReviewModel.findOneAndUpdate({ id: id },UpdateReviewInput)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} review`;
+  async remove(id: string): Promise<Review> {
+    return await this.ReviewModel.findOneAndRemove({ id: id })
   }
 }
