@@ -19,7 +19,7 @@ export class ClientResolver {
   }
 
   @Query(() => Client, { name: 'client' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.clientService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class ClientResolver {
   }
 
   @Mutation(() => Client)
-  removeClient(@Args('id', { type: () => Int }) id: number) {
+  removeClient(@Args('id', { type: () => String }) id: string) {
     return this.clientService.remove(id);
   }
 }

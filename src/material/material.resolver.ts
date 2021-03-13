@@ -19,7 +19,7 @@ export class MaterialResolver {
   }
 
   @Query(() => Material, { name: 'material' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.materialService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class MaterialResolver {
   }
 
   @Mutation(() => Material)
-  removeMaterial(@Args('id', { type: () => Int }) id: number) {
+  removeMaterial(@Args('id', { type: () => String }) id: string) {
     return this.materialService.remove(id);
   }
 }

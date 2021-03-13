@@ -24,10 +24,10 @@ export class User extends Document {
   @Field(() => Int)
   @Prop()
   tel: number;
-
+  /*
   @Field(() => Int)
-  @Prop({ type: Types.ObjectId /*, ref:*/ })
-  profile: number;
+  @Prop({ type: Types.ObjectId /*, ref: })
+  profile: number;*/
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

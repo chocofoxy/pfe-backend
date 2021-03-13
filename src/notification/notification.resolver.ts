@@ -19,7 +19,7 @@ export class NotificationResolver {
   }
 
   @Query(() => Notification, { name: 'notification' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.notificationService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class NotificationResolver {
   }
 
   @Mutation(() => Notification)
-  removeNotification(@Args('id', { type: () => Int }) id: number) {
+  removeNotification(@Args('id', { type: () => String }) id: string) {
     return this.notificationService.remove(id);
   }
 }

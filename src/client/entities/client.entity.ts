@@ -5,8 +5,10 @@ import { Document, ObjectId, Types } from 'mongoose';
 @Schema()
 @ObjectType()
 export class Client extends Document {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+
+  @Field(() => String, { description: 'Id' })
+  _id: string;
+  
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

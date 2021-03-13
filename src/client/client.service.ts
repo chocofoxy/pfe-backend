@@ -26,6 +26,6 @@ export class ClientService {
   }
 
   async remove(id: string): Promise<Client> {
-    return await this.ClientModel.findOneAndRemove({ email: email })
+    return await this.ClientModel.findOneAndRemove({ id: id })
   }
 }

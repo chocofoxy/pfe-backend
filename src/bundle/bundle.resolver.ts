@@ -19,7 +19,7 @@ export class BundleResolver {
   }
 
   @Query(() => Bundle, { name: 'bundle' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.bundleService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class BundleResolver {
   }
 
   @Mutation(() => Bundle)
-  removeBundle(@Args('id', { type: () => Int }) id: number) {
+  removeBundle(@Args('id', { type: () => String }) id: string) {
     return this.bundleService.remove(id);
   }
 }
