@@ -15,7 +15,7 @@ export class Bundle extends Document {
   title: string
 
   @Field(() => [Product], { description: 'Array of bundle\'s products' })
-  @Prop({ type: [{ type: Types.ObjectId , ref: Product }] })
+  @Prop({ type: [{ type: Types.ObjectId , ref: () => Product }] })
   products: Product[]
 
   @Field(() => Float, { description: 'Price of the bundle' })

@@ -12,7 +12,7 @@ export class Review extends Document {
   _id: ObjectId;
 
   @Field(() => Client, { description: 'Review\'s client' })
-  @Prop({ type: Types.ObjectId , ref: Client })
+  @Prop({ type: Types.ObjectId , ref: () => Client })
   client: Client
 
   @Field(() => Int, { description: 'Review\'s rating' })
