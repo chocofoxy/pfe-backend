@@ -17,6 +17,7 @@ import { OrderModule } from './order/order.module';
 import { BundleModule } from './bundle/bundle.module';
 import { ClientModule } from './client/client.module';
 import { MaterialModule } from './material/material.module';
+import { ModelModule } from './model/model.module';
 
 
 @Module({
@@ -36,7 +37,8 @@ import { MaterialModule } from './material/material.module';
     OrderModule,
     BundleModule,
     ClientModule,
-    MaterialModule
+    MaterialModule,
+    ModelModule,
   ],
   controllers: [AppController],
   providers: [
