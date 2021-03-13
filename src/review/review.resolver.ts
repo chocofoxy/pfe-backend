@@ -19,7 +19,7 @@ export class ReviewResolver {
   }
 
   @Query(() => Review, { name: 'review' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class ReviewResolver {
   }
 
   @Mutation(() => Review)
-  removeReview(@Args('id', { type: () => Int }) id: number) {
+  removeReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.remove(id);
   }
 }

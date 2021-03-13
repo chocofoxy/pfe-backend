@@ -19,7 +19,7 @@ export class StoreResolver {
   }
 
   @Query(() => Store, { name: 'store' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.storeService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class StoreResolver {
   }
 
   @Mutation(() => Store)
-  removeStore(@Args('id', { type: () => Int }) id: number) {
+  removeStore(@Args('id', { type: () => String }) id: string) {
     return this.storeService.remove(id);
   }
 }
