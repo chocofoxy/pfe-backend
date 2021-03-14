@@ -4,6 +4,7 @@ import { Document, ObjectId, Types } from 'mongoose';
 import { Model } from 'src/model/entities/model.entity';
 import { Reviewable } from 'src/review/entities/reviewable';
 import { Store } from 'src/store/entities/store.entity';
+import { File } from 'multer'
 
 @Schema()
 @ObjectType()
