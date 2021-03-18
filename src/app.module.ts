@@ -18,14 +18,19 @@ import { BundleModule } from './bundle/bundle.module';
 import { ClientModule } from './client/client.module';
 import { MaterialModule } from './material/material.module';
 import { ModelModule } from './model/model.module';
-
+import { MulterModule } from '@nestjs/platform-express';
+import { join } from 'path';
 
 @Module({
   imports: [
     UsersModule, 
     AuthenticationModule,
+    MulterModule.register({
+      dest: './upload',
+    }),
     GraphQLModule.forRoot({
-      autoSchemaFile: true,
+      uploads: true,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
     MongooseModule.forRoot('mongodb+srv://root:root@cluster0.ku0vu.mongodb.net/pfe'),
     ProductModule,

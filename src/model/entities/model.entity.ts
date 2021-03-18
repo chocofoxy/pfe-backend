@@ -2,6 +2,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { Material } from 'src/material/entities/material.entity';
+import { File } from 'src/storage/file.schema'
 
 @ObjectType()
 export class Model extends Document {

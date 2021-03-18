@@ -4,7 +4,7 @@ import { Document, ObjectId, Types } from 'mongoose';
 import { Model } from 'src/model/entities/model.entity';
 import { Reviewable } from 'src/review/entities/reviewable';
 import { Store } from 'src/store/entities/store.entity';
-import { File } from 'multer'
+//import { Image } from 'graphql-upload'
 
 @Schema()
 @ObjectType()
@@ -19,10 +19,10 @@ export class Product extends Reviewable {
   @Field(() => Float, { description: 'Product price' })
   @Prop()
   price: number;
-
-  @Field(() => [File], { description: 'Product\'s images' })
+  /*
+  @Field(() => [Image], { description: 'Product\'s images' })
   @Prop()
-  images: File[];
+  images: Image[];*/
 
   @Field(() => Model, { description: 'Product\'s model' })
   @Prop({ type: Types.ObjectId , ref: () => Model })

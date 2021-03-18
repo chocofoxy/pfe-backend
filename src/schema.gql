@@ -1,0 +1,290 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+}
+
+type File {
+  originalName: String!
+  filename: String!
+  path: String!
+  url: String!
+}
+
+type Material {
+  """Id"""
+  _id: String!
+
+  """Color"""
+  color: String!
+
+  """File"""
+  file: File!
+}
+
+type Model {
+  """Id"""
+  _id: String!
+
+  """Product's store"""
+  mesh: File!
+
+  """Product's store"""
+  materials: [Material!]!
+}
+
+type Client {
+  """Id"""
+  _id: String!
+}
+
+type Store {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Review {
+  """Id of the review"""
+  _id: String!
+
+  """Review's client"""
+  client: Client!
+
+  """Review's rating"""
+  rating: Int!
+
+  """Review's feedback"""
+  feedback: String!
+}
+
+type Product {
+  """Id"""
+  _id: String!
+
+  """Product name"""
+  name: String!
+
+  """Product price"""
+  price: Float!
+
+  """Product's model"""
+  model3d: Model!
+
+  """Product's store"""
+  store: Store!
+}
+
+type Report {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Category {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Notification {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Order {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Bundle {
+  """Id of the bundle"""
+  _id: String!
+
+  """title of the bundle"""
+  title: String!
+
+  """Array of bundle's products"""
+  products: [Product!]!
+
+  """Price of the bundle"""
+  price: Float!
+}
+
+type Query {
+  users: [User!]!
+  user(email: String!): User!
+  product(id: String!): Product!
+  store(id: String!): Store!
+  review(id: String!): Review!
+  report(id: String!): Report!
+  category(id: String!): Category!
+  notification(id: String!): Notification!
+  order(id: String!): Order!
+  bundle(id: String!): Bundle!
+  client(id: String!): Client!
+  materials: [Material!]!
+  material(id: String!): Material!
+  model(id: String!): Model!
+}
+
+type Mutation {
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(email: String!): User!
+  login(authInfo: AuthInfo!): String
+  signup(informations: CreateUserInput!): User!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: String!): Product!
+  createStore(createStoreInput: CreateStoreInput!): Store!
+  updateStore(updateStoreInput: UpdateStoreInput!): Store!
+  removeStore(id: String!): Store!
+  createReview(createReviewInput: CreateReviewInput!): Review!
+  updateReview(updateReviewInput: UpdateReviewInput!): Review!
+  removeReview(id: String!): Review!
+  createReport(createReportInput: CreateReportInput!): Report!
+  updateReport(updateReportInput: UpdateReportInput!): Report!
+  removeReport(id: String!): Report!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
+  removeCategory(id: String!): Category!
+  createNotification(createNotificationInput: CreateNotificationInput!): Notification!
+  updateNotification(updateNotificationInput: UpdateNotificationInput!): Notification!
+  removeNotification(id: String!): Notification!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  removeOrder(id: String!): Order!
+  createBundle(createBundleInput: CreateBundleInput!): Bundle!
+  updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
+  removeBundle(id: String!): Bundle!
+  createClient(createClientInput: CreateClientInput!): Client!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
+  removeClient(id: String!): Client!
+  createMaterial(createMaterialInput: CreateMaterialInput!): Material!
+  updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
+  removeMaterial(id: String!): Material!
+  createModel(createModelInput: CreateModelInput!): Model!
+  updateModel(updateModelInput: UpdateModelInput!): Model!
+  removeModel(id: String!): Model!
+}
+
+input UpdateUserInput {
+  email: String!
+  password: String
+  tel: Int
+  username: String
+}
+
+input AuthInfo {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  tel: Int!
+  username: String!
+}
+
+input CreateProductInput {
+  id: String!
+}
+
+input UpdateProductInput {
+  id: String!
+}
+
+input CreateStoreInput {
+  id: String!
+}
+
+input UpdateStoreInput {
+  id: String!
+}
+
+input CreateReviewInput {
+  id: String!
+}
+
+input UpdateReviewInput {
+  id: String!
+}
+
+input CreateReportInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateReportInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: String!
+}
+
+input CreateCategoryInput {
+  id: String!
+}
+
+input UpdateCategoryInput {
+  id: String!
+}
+
+input CreateNotificationInput {
+  id: String!
+}
+
+input UpdateNotificationInput {
+  id: String!
+}
+
+input CreateOrderInput {
+  id: String!
+}
+
+input UpdateOrderInput {
+  id: String!
+}
+
+input CreateBundleInput {
+  id: String!
+}
+
+input UpdateBundleInput {
+  id: String!
+}
+
+input CreateClientInput {
+  id: String!
+}
+
+input UpdateClientInput {
+  id: String!
+}
+
+input CreateMaterialInput {
+  color: String!
+  file: Upload!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UpdateMaterialInput {
+  color: String
+  file: Upload
+  id: String!
+}
+
+input CreateModelInput {
+  """Id"""
+  id: String!
+}
+
+input UpdateModelInput {
+  """Id"""
+  id: String!
+}
