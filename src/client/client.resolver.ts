@@ -3,11 +3,13 @@ import { ClientService } from './client.service';
 import { Client } from './entities/client.entity';
 import { CreateClientInput } from './dto/create-client.input';
 import { UpdateClientInput } from './dto/update-client.input';
+import { Public } from 'src/guards/public.decorator';
 
 @Resolver(() => Client)
 export class ClientResolver {
   constructor(private readonly clientService: ClientService) {}
 
+  @Public()
   @Mutation(() => Client)
   createClient(@Args('createClientInput') createClientInput: CreateClientInput) {
     return this.clientService.create(createClientInput);

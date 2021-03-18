@@ -17,15 +17,15 @@ export class ClientService {
     return await this.ClientModel.find()
   }
 
-  async findOne(id: string): Promise<Client> {
-    return await this.ClientModel.findOne({ id: id })
+  async findOne(email: string): Promise<Client> {
+    return await this.ClientModel.findOne({ email: email })
   }
 
-  async update(id: string, updateClientInput: UpdateClientInput): Promise<Client> {
-    return await this.ClientModel.findOneAndUpdate({ id: id },UpdateClientInput)
+  async update(email: string, updateClientInput: UpdateClientInput): Promise<Client> {
+    return await this.ClientModel.findOneAndUpdate({ email: email },UpdateClientInput)
   }
 
-  async remove(id: string): Promise<Client> {
-    return await this.ClientModel.findOneAndRemove({ id: id })
+  async remove(email: string): Promise<Client> {
+    return await this.ClientModel.findOneAndRemove({ email: email })
   }
 }

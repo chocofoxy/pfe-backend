@@ -6,10 +6,14 @@ import { AuthenticationService } from './authentication.service';
 import { jwtConstants } from './constant';
 import { AuthenticationResolver } from './authentication.resolver';
 import { JwtStrategy } from './jwt.strategy';
+import { StoreModule } from 'src/store/store.module';
+import { ClientModule } from 'src/client/client.module';
 
 @Module({
   imports: [
+    forwardRef(() => ClientModule),
     forwardRef(() => UsersModule),
+    forwardRef(() => StoreModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,

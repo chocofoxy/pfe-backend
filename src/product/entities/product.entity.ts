@@ -2,13 +2,14 @@ import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { Model } from 'src/model/entities/model.entity';
-import { Reviewable } from 'src/review/entities/reviewable';
+import { Review } from 'src/review/entities/review.entity';
 import { Store } from 'src/store/entities/store.entity';
-//import { Image } from 'graphql-upload'
+import { File } from 'src/storage/file.schema'
 
 @Schema()
 @ObjectType()
-export class Product extends Reviewable {
+export class Product extends Document {
+  
   @Field(() => String, { description: 'Id' })
   _id: string;
 
@@ -19,10 +20,10 @@ export class Product extends Reviewable {
   @Field(() => Float, { description: 'Product price' })
   @Prop()
   price: number;
-  /*
-  @Field(() => [Image], { description: 'Product\'s images' })
+  
+  @Field(() => [File], { description: 'Product\'s images' })
   @Prop()
-  images: Image[];*/
+  images: File[];
 
   @Field(() => Model, { description: 'Product\'s model' })
   @Prop({ type: Types.ObjectId , ref: () => Model })
@@ -32,6 +33,9 @@ export class Product extends Reviewable {
   @Prop({ type: Types.ObjectId , ref: () => Store })
   store: Store;
 
+  @Field(() => [Review], { description: "Reviews"})
+  @Prop({ type: [{ type: Types.ObjectId , ref: () => Review }]})
+  reviews: Review[]
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

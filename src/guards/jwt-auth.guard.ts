@@ -16,9 +16,19 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    const user =  this.getRequest(context).user
+
+    console.log(this.getRequest(context));
+    
     if (isPublic) {
       return true;
     }
+    /*
+    if (roles && roles.includes(user.Class.Name)) {
+      return true;
+    }*/    
+
     return super.canActivate(context);
   }
 

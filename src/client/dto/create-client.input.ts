@@ -1,7 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
 
 @InputType()
-export class CreateClientInput {
-  @Field(() => String)
-  id: string;
+export class CreateClientInput extends CreateUserInput {
 }

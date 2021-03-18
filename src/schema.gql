@@ -10,6 +10,19 @@ type User {
   tel: Int!
 }
 
+type Client {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+}
+
+type Order {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type File {
   originalName: String!
   filename: String!
@@ -39,16 +52,6 @@ type Model {
   materials: [Material!]!
 }
 
-type Client {
-  """Id"""
-  _id: String!
-}
-
-type Store {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Review {
   """Id of the review"""
   _id: String!
@@ -73,11 +76,43 @@ type Product {
   """Product price"""
   price: Float!
 
+  """Product's images"""
+  images: [File!]!
+
   """Product's model"""
   model3d: Model!
 
   """Product's store"""
   store: Store!
+
+  """Reviews"""
+  reviews: [Review!]!
+}
+
+type Store {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+  picture: File!
+  documents: [File!]!
+
+  """products"""
+  products: [Product!]!
+
+  """orders"""
+  orders: [Order!]!
+
+  """Reviews"""
+  reviews: [Review!]!
+  approved: Boolean!
+}
+
+type AuthResponse {
+  token: String!
+  role: String!
+  user: User!
 }
 
 type Report {
@@ -91,11 +126,6 @@ type Category {
 }
 
 type Notification {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Order {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -115,33 +145,33 @@ type Bundle {
 }
 
 type Query {
-  users: [User!]!
-  user(email: String!): User!
-  product(id: String!): Product!
+  client(id: String!): Client!
   store(id: String!): Store!
+  product(id: String!): Product!
   review(id: String!): Review!
   report(id: String!): Report!
   category(id: String!): Category!
   notification(id: String!): Notification!
   order(id: String!): Order!
   bundle(id: String!): Bundle!
-  client(id: String!): Client!
   materials: [Material!]!
   material(id: String!): Material!
   model(id: String!): Model!
 }
 
 type Mutation {
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(email: String!): User!
-  login(authInfo: AuthInfo!): String
-  signup(informations: CreateUserInput!): User!
-  createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(id: String!): Product!
+  createClient(createClientInput: CreateClientInput!): Client!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
+  removeClient(id: String!): Client!
   createStore(createStoreInput: CreateStoreInput!): Store!
   updateStore(updateStoreInput: UpdateStoreInput!): Store!
   removeStore(id: String!): Store!
+  login(authInfo: AuthInfo!): AuthResponse
+  signupStore(informations: CreateStoreInput!): User!
+  signupClient(informations: CreateClientInput!): User!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: String!): Product!
   createReview(createReviewInput: CreateReviewInput!): Review!
   updateReview(updateReviewInput: UpdateReviewInput!): Review!
   removeReview(id: String!): Review!
@@ -160,9 +190,6 @@ type Mutation {
   createBundle(createBundleInput: CreateBundleInput!): Bundle!
   updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
   removeBundle(id: String!): Bundle!
-  createClient(createClientInput: CreateClientInput!): Client!
-  updateClient(updateClientInput: UpdateClientInput!): Client!
-  removeClient(id: String!): Client!
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
   removeMaterial(id: String!): Material!
@@ -171,30 +198,18 @@ type Mutation {
   removeModel(id: String!): Model!
 }
 
-input UpdateUserInput {
-  email: String!
-  password: String
-  tel: Int
-  username: String
-}
-
-input AuthInfo {
-  email: String!
-  password: String!
-}
-
-input CreateUserInput {
+input CreateClientInput {
   email: String!
   password: String!
   tel: Int!
   username: String!
 }
 
-input CreateProductInput {
-  id: String!
-}
-
-input UpdateProductInput {
+input UpdateClientInput {
+  email: String
+  password: String
+  tel: Int
+  username: String
   id: String!
 }
 
@@ -203,6 +218,19 @@ input CreateStoreInput {
 }
 
 input UpdateStoreInput {
+  id: String!
+}
+
+input AuthInfo {
+  email: String!
+  password: String!
+}
+
+input CreateProductInput {
+  id: String!
+}
+
+input UpdateProductInput {
   id: String!
 }
 
@@ -257,14 +285,6 @@ input UpdateBundleInput {
   id: String!
 }
 
-input CreateClientInput {
-  id: String!
-}
-
-input UpdateClientInput {
-  id: String!
-}
-
 input CreateMaterialInput {
   color: String!
   file: Upload!
@@ -280,11 +300,18 @@ input UpdateMaterialInput {
 }
 
 input CreateModelInput {
-  """Id"""
-  id: String!
+  name: String!
+  price: Float!
+  mesh: Upload!
+  description: String!
 }
 
 input UpdateModelInput {
+  name: String
+  price: Float
+  mesh: Upload
+  description: String
+
   """Id"""
   id: String!
 }
