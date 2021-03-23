@@ -20,6 +20,10 @@ export class Product extends Document {
   @Field(() => Float, { description: 'Product price' })
   @Prop()
   price: number;
+ 
+  @Field(() => String, { description: 'Product description' })
+  @Prop()
+  description: string;
   
   @Field(() => [File], { description: 'Product\'s images' })
   @Prop()

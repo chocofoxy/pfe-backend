@@ -1,7 +1,19 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Int, Field, Float } from '@nestjs/graphql';
+import { GraphQLUpload } from 'apollo-server-express';
 
 @InputType()
 export class CreateProductInput {
-  @Field(() => String)
-  id: string;
+ 
+  @Field(() => String, { description: 'Product name' })
+  name: string;
+
+  @Field(() => Float, { description: 'Product price' })
+  price: number;
+ 
+  @Field(() => String, { description: 'Product description' })
+  description: string;
+  
+  @Field(() => [GraphQLUpload], { description: 'Product\'s images' })
+  images
+
 }

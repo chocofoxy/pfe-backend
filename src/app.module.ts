@@ -20,6 +20,7 @@ import { MaterialModule } from './material/material.module';
 import { ModelModule } from './model/model.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { join } from 'path';
+import { RoleGuard } from './guards/role.guard';
 
 @Module({
   imports: [
@@ -29,7 +30,10 @@ import { join } from 'path';
       dest: './upload',
     }),
     GraphQLModule.forRoot({
-      uploads: true,
+      uploads: {
+        maxFileSize: 200000000, // 20 MB
+        maxFiles: 10
+      },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
     MongooseModule.forRoot('mongodb+srv://root:root@cluster0.ku0vu.mongodb.net/pfe'),
@@ -52,6 +56,10 @@ import { join } from 'path';
       provide: APP_GUARD,
       useClass: GqlAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    }
   ],
 })
 export class AppModule {}

@@ -12,7 +12,7 @@ import { GraphqlFiles } from 'src/storage/file.interceptor';
 export class MaterialResolver {
   constructor(private readonly materialService: MaterialService) {}
 
-  @UseInterceptors(GraphqlFiles([{ name: "file" }],{ input: "createMaterialInput" }))
+  //@UseInterceptors(GraphqlFiles([{ name: "file" }],{ input: "createMaterialInput" }))
   @Mutation(() => Material)
   async createMaterial(@Args('createMaterialInput') createMaterialInput: CreateMaterialInput) {
     return this.materialService.create(createMaterialInput);

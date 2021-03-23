@@ -19,12 +19,13 @@ export function GraphqlFiles(uploadFields: IField[], localOptions?: any ,) {
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
       {
         const ctx = GqlExecutionContext.create(context);
-        const args = this.options.input ? ctx.getArgs()[this.options.input] : ctx.getArgs() 
-        let res = await Promise.all(
-          uploadFields.map( field => 
-             save(args[field.name]).then( (file) => args[field.name] = file )
-          )
-        )
+        const args = ctx.getArgs() 
+        for ( let field of uploadFields ) {
+          if (field.options.array)
+          await args[this.options.input][field.name].map((file) => save(file).then( (f) => file = f ))
+          else
+          args[this.options.input][field.name] = save( args[this.options.input][field.name]).then((file) => file )
+        }
         return next.handle()
       }
     }

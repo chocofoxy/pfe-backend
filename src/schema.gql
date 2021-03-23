@@ -76,6 +76,9 @@ type Product {
   """Product price"""
   price: Float!
 
+  """Product description"""
+  description: String!
+
   """Product's images"""
   images: [File!]!
 
@@ -227,10 +230,34 @@ input AuthInfo {
 }
 
 input CreateProductInput {
-  id: String!
+  """Product name"""
+  name: String!
+
+  """Product price"""
+  price: Float!
+
+  """Product description"""
+  description: String!
+
+  """Product's images"""
+  images: [Upload!]!
 }
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
 input UpdateProductInput {
+  """Product name"""
+  name: String
+
+  """Product price"""
+  price: Float
+
+  """Product description"""
+  description: String
+
+  """Product's images"""
+  images: [Upload!]
   id: String!
 }
 
@@ -289,9 +316,6 @@ input CreateMaterialInput {
   color: String!
   file: Upload!
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input UpdateMaterialInput {
   color: String

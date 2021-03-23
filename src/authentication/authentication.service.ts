@@ -21,8 +21,8 @@ export class AuthenticationService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: any, role:any) {
+    const payload = { email: user.email, role: role , id: user._id };
     return this.jwtService.sign(payload)
   }
 
@@ -32,6 +32,6 @@ export class AuthenticationService {
       throw new UnauthorizedException();
     }      
   
-    return { token: this.login(payload.user), role: payload.role , user: payload.user }
+    return { token: this.login(payload.user,payload.role), role: payload.role , user: payload.user }
   }
 }
