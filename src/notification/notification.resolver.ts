@@ -8,10 +8,11 @@ import { UpdateNotificationInput } from './dto/update-notification.input';
 export class NotificationResolver {
   constructor(private readonly notificationService: NotificationService) {}
 
+  /*
   @Mutation(() => Notification)
   createNotification(@Args('createNotificationInput') createNotificationInput: CreateNotificationInput) {
     return this.notificationService.create(createNotificationInput);
-  }
+  }*/
 
   @Query(() => [Notification], { name: 'notification' })
   findAll() {

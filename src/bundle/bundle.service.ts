@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ProductService } from 'src/product/product.service';
 import { CreateBundleInput } from './dto/create-bundle.input';
 import { UpdateBundleInput } from './dto/update-bundle.input';
 import { Bundle } from './entities/bundle.entity';
 
 @Injectable()
 export class BundleService {
-  constructor(@InjectModel(Bundle.name) private BundleModel: Model<Bundle>) {}
+  constructor(
+    @InjectModel(Bundle.name) private BundleModel: Model<Bundle>,
+    private productService: ProductService
+    ) {}
   
   async create(createBundleInput: CreateBundleInput) {
+
     return await new this.BundleModel(createBundleInput).save()
   }
 

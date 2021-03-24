@@ -9,8 +9,8 @@ import { Notification } from './entities/notification.entity'
 export class NotificationService {
   constructor(@InjectModel(Notification.name) private NotificationModel: Model<Notification>) {}
   
-  async create(createNotificationInput: CreateNotificationInput) {
-    return await new this.NotificationModel(createNotificationInput).save()
+  async create() {
+    return await new this.NotificationModel().save()
   }
 
   async findAll(): Promise<Notification[]> {

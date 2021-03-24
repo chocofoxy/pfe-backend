@@ -28,4 +28,10 @@ export class CategoryService {
   async remove(id: string): Promise<Category> {
     return await this.CategoryModel.findOneAndRemove({ id: id })
   }
+
+  async approve(id: string): Promise<Category> {
+    const category = await this.findOne(id)
+    category.approved = true
+    return await this.update(id,category as UpdateCategoryInput)
+  }
 }

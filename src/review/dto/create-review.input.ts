@@ -2,6 +2,13 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateReviewInput {
-  @Field(() => String)
-  id: string;
+
+  @Field(() => Int, { description: 'Review\'s rating' })
+  rating: number
+
+  @Field(() => String, { description: 'Review\'s feedback id' })
+  feedbackId: string
+  
+  @Field(() => String , { description: 'Reviewable Id' })
+  reviewingId: string
 }

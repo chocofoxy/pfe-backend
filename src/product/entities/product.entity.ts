@@ -5,6 +5,7 @@ import { Model } from 'src/model/entities/model.entity';
 import { Review } from 'src/review/entities/review.entity';
 import { Store } from 'src/store/entities/store.entity';
 import { File } from 'src/storage/file.schema'
+import { Category } from 'src/category/entities/category.entity';
 
 @Schema()
 @ObjectType()
@@ -32,6 +33,10 @@ export class Product extends Document {
   @Field(() => Model, { description: 'Product\'s model' })
   @Prop({ type: Types.ObjectId , ref: () => Model })
   model3d: Model;  
+
+  @Field(() => Category, { description: 'Product\'s category' })
+  @Prop({ type: Types.ObjectId , ref: () => Category })
+  category: Category; 
   
   @Field(() => Store, { description: 'Product\'s store' })
   @Prop({ type: Types.ObjectId , ref: () => Store })
@@ -40,6 +45,14 @@ export class Product extends Document {
   @Field(() => [Review], { description: "Reviews"})
   @Prop({ type: [{ type: Types.ObjectId , ref: () => Review }]})
   reviews: Review[]
+
+  @Field(() => Int ,{ nullable: true })
+  @Prop({ default: null })
+  quantity: number
+
+  @Field(() => Boolean )
+  @Prop({ default: true })
+  available: boolean
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

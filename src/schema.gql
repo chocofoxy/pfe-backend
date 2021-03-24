@@ -18,11 +18,6 @@ type Client {
   tel: Int!
 }
 
-type Order {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type File {
   originalName: String!
   filename: String!
@@ -64,6 +59,16 @@ type Review {
 
   """Review's feedback"""
   feedback: String!
+
+  """Review's feedback"""
+  reviewing: Client!
+}
+
+type Category {
+  _id: String!
+  name: String!
+  approved: Boolean!
+  products: [Product!]!
 }
 
 type Product {
@@ -85,11 +90,29 @@ type Product {
   """Product's model"""
   model3d: Model!
 
+  """Product's category"""
+  category: Category!
+
   """Product's store"""
   store: Store!
 
   """Reviews"""
   reviews: [Review!]!
+  quantity: Int
+  available: Boolean!
+}
+
+type Order {
+  _id: String!
+  product: Product!
+  client: Client!
+  quantity: Int!
+  status: String!
+}
+
+type Notification {
+  _id: String!
+  events: [String!]!
 }
 
 type Store {
@@ -110,6 +133,9 @@ type Store {
   """Reviews"""
   reviews: [Review!]!
   approved: Boolean!
+
+  """Reviews"""
+  notification: Notification!
 }
 
 type AuthResponse {
@@ -119,18 +145,10 @@ type AuthResponse {
 }
 
 type Report {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Category {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Notification {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  _id: String!
+  user: User!
+  reported: User!
+  reason: String!
 }
 
 type Bundle {
@@ -143,19 +161,31 @@ type Bundle {
   """Array of bundle's products"""
   products: [Product!]!
 
+  """undle's store"""
+  store: Store!
+
   """Price of the bundle"""
   price: Float!
+
+  """Reviews"""
+  reviews: [Review!]!
 }
 
 type Query {
+  clients: [Client!]!
   client(id: String!): Client!
+  stores: [Store!]!
   store(id: String!): Store!
+  notification(id: String!): Notification!
+  products: [Product!]!
   product(id: String!): Product!
+  category(id: String!): Category!
+  reviews: [Review!]!
   review(id: String!): Review!
   report(id: String!): Report!
-  category(id: String!): Category!
-  notification(id: String!): Notification!
+  orders: [Order!]!
   order(id: String!): Order!
+  bundles: [Bundle!]!
   bundle(id: String!): Bundle!
   materials: [Material!]!
   material(id: String!): Material!
@@ -169,24 +199,25 @@ type Mutation {
   createStore(createStoreInput: CreateStoreInput!): Store!
   updateStore(updateStoreInput: UpdateStoreInput!): Store!
   removeStore(id: String!): Store!
+  approveStore(id: String!): Store!
+  updateNotification(updateNotificationInput: UpdateNotificationInput!): Notification!
+  removeNotification(id: String!): Notification!
   login(authInfo: AuthInfo!): AuthResponse
   signupStore(informations: CreateStoreInput!): User!
   signupClient(informations: CreateClientInput!): User!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: String!): Product!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
+  removeCategory(id: String!): Category!
+  approveCategory(id: String!): Category!
   createReview(createReviewInput: CreateReviewInput!): Review!
   updateReview(updateReviewInput: UpdateReviewInput!): Review!
   removeReview(id: String!): Review!
   createReport(createReportInput: CreateReportInput!): Report!
   updateReport(updateReportInput: UpdateReportInput!): Report!
   removeReport(id: String!): Report!
-  createCategory(createCategoryInput: CreateCategoryInput!): Category!
-  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
-  removeCategory(id: String!): Category!
-  createNotification(createNotificationInput: CreateNotificationInput!): Notification!
-  updateNotification(updateNotificationInput: UpdateNotificationInput!): Notification!
-  removeNotification(id: String!): Notification!
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
   removeOrder(id: String!): Order!
@@ -224,6 +255,10 @@ input UpdateStoreInput {
   id: String!
 }
 
+input UpdateNotificationInput {
+  id: String!
+}
+
 input AuthInfo {
   email: String!
   password: String!
@@ -241,6 +276,9 @@ input CreateProductInput {
 
   """Product's images"""
   images: [Upload!]!
+
+  """Product's categroy"""
+  categroy: String!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -258,14 +296,43 @@ input UpdateProductInput {
 
   """Product's images"""
   images: [Upload!]
+
+  """Product's categroy"""
+  categroy: String
+  id: String!
+}
+
+input CreateCategoryInput {
+  name: String!
+  approved: Boolean!
+}
+
+input UpdateCategoryInput {
+  name: String
+  approved: Boolean
   id: String!
 }
 
 input CreateReviewInput {
-  id: String!
+  """Review's rating"""
+  rating: Int!
+
+  """Review's feedback id"""
+  feedbackId: String!
+
+  """Reviewable Id"""
+  reviewingId: String!
 }
 
 input UpdateReviewInput {
+  """Review's rating"""
+  rating: Int
+
+  """Review's feedback id"""
+  feedbackId: String
+
+  """Reviewable Id"""
+  reviewingId: String
   id: String!
 }
 
@@ -280,35 +347,37 @@ input UpdateReportInput {
   id: String!
 }
 
-input CreateCategoryInput {
-  id: String!
-}
-
-input UpdateCategoryInput {
-  id: String!
-}
-
-input CreateNotificationInput {
-  id: String!
-}
-
-input UpdateNotificationInput {
-  id: String!
-}
-
 input CreateOrderInput {
-  id: String!
+  product: String!
+  quantity: Int!
 }
 
 input UpdateOrderInput {
+  product: String
+  quantity: Int
   id: String!
 }
 
 input CreateBundleInput {
-  id: String!
+  """title of the bundle"""
+  title: String!
+
+  """Array of bundle's products"""
+  products: [String!]!
+
+  """Price of the bundle"""
+  price: Float!
 }
 
 input UpdateBundleInput {
+  """title of the bundle"""
+  title: String
+
+  """Array of bundle's products"""
+  products: [String!]
+
+  """Price of the bundle"""
+  price: Float
   id: String!
 }
 

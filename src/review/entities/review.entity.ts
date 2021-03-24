@@ -22,10 +22,10 @@ export class Review extends Document {
   @Field(() => String, { description: 'Review\'s feedback' })
   @Prop()
   feedback: string
-  /*
+  
   @Field(() => Client || Store || Product , { description: 'Review\'s feedback' })
-  @Prop({ type: Types.ObjectId , ref: Client || Store || Product })
-  reviewing: Client | Store | Product */
+  @Prop({ type: Types.ObjectId , ref: () => [Client, Store, Product] })
+  reviewing
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

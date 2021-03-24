@@ -8,13 +8,13 @@ import { Roles } from 'src/guards/roles.decorator';
 import { UseInterceptors } from '@nestjs/common';
 import { GraphqlFiles } from 'src/storage/file.interceptor';
 import { save } from 'src/storage/storage';
-import { Public } from 'dist/guards/public.decorator';
+import { Public } from 'src/guards/public.decorator';
 
 @Resolver(() => Product)
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
-  @Roles('Client','Admin')
+  @Roles('Store','Admin')
   @Mutation(() => Product)
   createProduct(@Args('createProductInput') createProductInput: CreateProductInput, @CurrentUser() user ) {
     createProductInput.images.map((file) => save(file).then( (f) => file = f ))
@@ -22,21 +22,24 @@ export class ProductResolver {
   }
 
   @Public()
-  @Query(() => [Product], { name: 'product' })
+  @Query(() => [Product], { name: 'products' })
   findAll() {
     return this.productService.findAll();
   }
 
+  @Public()
   @Query(() => Product, { name: 'product' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.productService.findOne(id);
   }
 
+  @Roles('Store','Admin')
   @Mutation(() => Product)
   updateProduct(@Args('updateProductInput') updateProductInput: UpdateProductInput) {
     return this.productService.update(updateProductInput.id, updateProductInput);
   }
 
+  @Roles('Store','Admin')
   @Mutation(() => Product)
   removeProduct(@Args('id', { type: () => String }) id: string) {
     return this.productService.remove(id);

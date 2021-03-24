@@ -16,4 +16,7 @@ export class CreateProductInput {
   @Field(() => [GraphQLUpload], { description: 'Product\'s images' })
   images
 
+  @Field(() => String, { description: 'Product\'s categroy' })
+  categroy: string
+
 }

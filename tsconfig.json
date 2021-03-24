@@ -12,6 +12,9 @@
     "baseUrl": "./",
     "incremental": true
   },
+  "include": [
+    "src/"
+  ],
   "exclude":[
     "public",
     "uploads"
