@@ -25,6 +25,10 @@ export class User extends Document {
   @Prop()
   tel: number;
 
+  @Field(() => Boolean )
+  @Prop({ default: false })
+  Banned: boolean
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

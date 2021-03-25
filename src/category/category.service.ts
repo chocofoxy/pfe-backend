@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Status } from 'src/enums';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { Category } from './entities/category.entity';
@@ -31,7 +32,7 @@ export class CategoryService {
 
   async approve(id: string): Promise<Category> {
     const category = await this.findOne(id)
-    category.approved = true
+    category.status = Status.confirmed
     return await this.update(id,category as UpdateCategoryInput)
   }
 }

@@ -1,7 +1,8 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { HttpException, UnauthorizedException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Client } from 'src/client/entities/client.entity';
+import { Store } from 'src/store/entities/store.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UsersService } from 'src/user/users.service';
 
@@ -15,10 +16,12 @@ export class AuthenticationService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const data = await this.usersService.findOne(username);
-    if (data.user && data.user.password === pass) {
+    if (data && data.user && data.user.password === pass) {
+      if ( data.role == Store.name && data.user.approved == false )
+      throw new HttpException('your account isn\'t verified yet',401) ;
       return data;
     }
-    return null;
+    throw new HttpException('you passed wrong informations',401) ;
   }
 
   async login(user: any, role:any) {

@@ -12,12 +12,21 @@ export class Report extends Document {
   _id: string;
 
   @Field(() => User)
-  @Prop({ type: Types.ObjectId , ref: () => [Store,Client] })
-  user
+  @Prop({ type: Types.ObjectId , refPath: 'reporterType' })
+  reporter
 
+  @Field(() => String , { description: 'Review\'s type of reported item' })
+  @Prop({ type: String, required: true, enum: ['Client','Store'] })
+  reporterType
+  
   @Field(() => User)
-  @Prop({ type: Types.ObjectId , ref: () => [Store,Client] })
+  @Prop({ type: Types.ObjectId , refPath: 'reportedType' })
   reported
+
+  @Field(() => String , { description: 'Review\'s type of reported item' })
+  @Prop({ type: String, required: true, enum: ['Client','Store'] })
+  reportedType
+
 
   @Field(() => String)
   @Prop()
@@ -26,3 +35,4 @@ export class Report extends Document {
 }
 
 export const ReportSchema = SchemaFactory.createForClass(Report);
+

@@ -6,18 +6,19 @@ import { UpdateReviewInput } from './dto/update-review.input';
 import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
 import { Public } from 'src/guards/public.decorator';
+import { Role } from 'src/enums';
 
 @Resolver(() => Review)
 export class ReviewResolver {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Roles('Client')
+  @Roles(Role.client)
   @Mutation(() => Review)
   createReview(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
     return this.reviewService.create({...createReviewInput, client: user.id } as CreateReviewInput);
   }
 
-  @Roles('Admin')
+  @Roles(Role.admin)
   @Query(() => [Review], { name: 'reviews' })
   findAll() {
     return this.reviewService.findAll();
@@ -29,13 +30,13 @@ export class ReviewResolver {
     return this.reviewService.findOne(id);
   }
 
-  @Roles('Client')
+  @Roles(Role.client)
   @Mutation(() => Review)
   updateReview(@Args('updateReviewInput') updateReviewInput: UpdateReviewInput) {
     return this.reviewService.update(updateReviewInput.id, updateReviewInput);
   }
 
-  @Roles('Client')
+  @Roles(Role.client)
   @Mutation(() => Review)
   removeReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.remove(id);

@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { Product } from './entities/product.entity';
+import { Status } from 'src/enums';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +16,7 @@ export class ProductService {
   
   async create(createProductInput: CreateProductInput) {
     const category = await this.categoryService.findOne(createProductInput.categroy)
-    if ( category && category.approved ) {
+    if ( category && category.status == Status.confirmed ) {
       const product = await new this.ProductModel(createProductInput).save()
       category.products.push(product._id)
       return product

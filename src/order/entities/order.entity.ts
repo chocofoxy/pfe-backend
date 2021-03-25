@@ -2,13 +2,9 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { Client } from 'src/client/entities/client.entity';
+import { Status } from 'src/enums';
 import { Product } from 'src/product/entities/product.entity';
 
-export enum Status {
-  pending = "Pending",
-  confirmed = "Confirmed",
-  cancelled = "Cancelled"
-}
 
 @Schema({ useNestedStrict: false })
 @ObjectType()

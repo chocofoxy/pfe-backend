@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UsersService } from 'src/user/users.service';
 import { CreateClientInput } from './dto/create-client.input';
 import { UpdateClientInput } from './dto/update-client.input';
 import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectModel(Client.name) private ClientModel: Model<Client>) {}
+  constructor(
+    @InjectModel(Client.name) private ClientModel: Model<Client>,
+    @Inject(forwardRef(() => UsersService)) private usersService: UsersService
+    ) {}
   
   async create(createClientInput: CreateClientInput) {
+    if ( await this.usersService.findOne(createClientInput.email) == null )
     return await new this.ClientModel(createClientInput).save()
+    else
+    throw new HttpException('another account is using this mail',400)
   }
 
   async findAll(): Promise<Client[]> {

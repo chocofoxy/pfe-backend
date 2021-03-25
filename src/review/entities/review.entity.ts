@@ -24,8 +24,12 @@ export class Review extends Document {
   feedback: string
   
   @Field(() => Client || Store || Product , { description: 'Review\'s feedback' })
-  @Prop({ type: Types.ObjectId , ref: () => [Client, Store, Product] })
+  @Prop({ type: Types.ObjectId , refPath: 'type' })
   reviewing
+
+  @Field(() => String , { description: 'Review\'s type of reported item' })
+  @Prop({ type: String, required: true, enum: ['Client','Store','Product'] })
+  type
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

@@ -3,14 +3,18 @@ import { ReportService } from './report.service';
 import { Report } from './entities/report.entity';
 import { CreateReportInput } from './dto/create-report.input';
 import { UpdateReportInput } from './dto/update-report.input';
+import { Roles } from 'src/guards/roles.decorator';
+import { Role } from 'src/enums';
+import { CurrentUser } from 'src/guards/current-user.decorator';
 
 @Resolver(() => Report)
 export class ReportResolver {
   constructor(private readonly reportService: ReportService) {}
 
+  @Roles(Role.admin,Role.client,Role.store)
   @Mutation(() => Report)
-  createReport(@Args('createReportInput') createReportInput: CreateReportInput) {
-    return this.reportService.create(createReportInput);
+  createReport(@Args('createReportInput') createReportInput: CreateReportInput,@CurrentUser() user) {
+    return this.reportService.create({...createReportInput, reporter: user.id , reporterType: user.role } as CreateReportInput);
   }
 
   @Query(() => [Report], { name: 'report' })

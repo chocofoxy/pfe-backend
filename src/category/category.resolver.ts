@@ -6,15 +6,16 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
 import { Public } from 'src/guards/public.decorator';
+import { Role } from 'src/enums';
 
 @Resolver(() => Category)
 export class CategoryResolver {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin, Role.store)
   @Mutation(() => Category)
   createCategory(@Args('createCategoryInput') createCategoryInput: CreateCategoryInput, @CurrentUser() user) {
-    return this.categoryService.create({...createCategoryInput , approved: user.role == "Admin" });
+    return this.categoryService.create({...createCategoryInput , approved: user.role == Role.admin });
   }
 
   @Public()
@@ -29,19 +30,19 @@ export class CategoryResolver {
     return this.categoryService.findOne(id);
   }
 
-  @Roles('Admin')
+  @Roles(Role.admin)
   @Mutation(() => Category)
   updateCategory(@Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput) {
     return this.categoryService.update(updateCategoryInput.id, updateCategoryInput);
   }
 
-  @Roles('Admin')
+  @Roles(Role.admin)
   @Mutation(() => Category)
   removeCategory(@Args('id', { type: () => String }) id: string) {
     return this.categoryService.remove(id);
   }
 
-  @Roles('Admin')
+  @Roles(Role.admin)
   @Mutation(() => Category)
   approveCategory(@Args('id', { type: () => String }) id: string) {
     return this.categoryService.approve(id);

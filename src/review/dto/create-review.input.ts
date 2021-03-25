@@ -7,7 +7,7 @@ export class CreateReviewInput {
   rating: number
 
   @Field(() => String, { description: 'Review\'s feedback id' })
-  feedbackId: string
+  feedback: string
   
   @Field(() => String , { description: 'Reviewable Id' })
   reviewingId: string

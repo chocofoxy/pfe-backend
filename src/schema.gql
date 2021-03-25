@@ -2,22 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  _id: String!
-  username: String!
-  email: String!
-  password: String!
-  tel: Int!
-}
-
-type Client {
-  _id: String!
-  username: String!
-  email: String!
-  password: String!
-  tel: Int!
-}
-
 type File {
   originalName: String!
   filename: String!
@@ -47,6 +31,44 @@ type Model {
   materials: [Material!]!
 }
 
+type User {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+  Banned: Boolean!
+}
+
+type Notification {
+  _id: String!
+  events: [String!]!
+}
+
+type Store {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+  Banned: Boolean!
+  picture: File!
+  documents: [File!]!
+
+  """products"""
+  products: [Product!]!
+
+  """orders"""
+  orders: [Order!]!
+
+  """Reviews"""
+  reviews: [Review!]!
+  approved: Boolean!
+
+  """Reviews"""
+  notification: Notification!
+}
+
 type Review {
   """Id of the review"""
   _id: String!
@@ -62,12 +84,15 @@ type Review {
 
   """Review's feedback"""
   reviewing: Client!
+
+  """Review's type of reported item"""
+  type: String!
 }
 
 type Category {
   _id: String!
   name: String!
-  approved: Boolean!
+  status: String!
   products: [Product!]!
 }
 
@@ -100,6 +125,7 @@ type Product {
   reviews: [Review!]!
   quantity: Int
   available: Boolean!
+  status: String!
 }
 
 type Order {
@@ -110,32 +136,14 @@ type Order {
   status: String!
 }
 
-type Notification {
-  _id: String!
-  events: [String!]!
-}
-
-type Store {
+type Client {
   _id: String!
   username: String!
   email: String!
   password: String!
   tel: Int!
-  picture: File!
-  documents: [File!]!
-
-  """products"""
-  products: [Product!]!
-
-  """orders"""
+  Banned: Boolean!
   orders: [Order!]!
-
-  """Reviews"""
-  reviews: [Review!]!
-  approved: Boolean!
-
-  """Reviews"""
-  notification: Notification!
 }
 
 type AuthResponse {
@@ -146,8 +154,14 @@ type AuthResponse {
 
 type Report {
   _id: String!
-  user: User!
+  reporter: User!
+
+  """Review's type of reported item"""
+  reporterType: String!
   reported: User!
+
+  """Review's type of reported item"""
+  reportedType: String!
   reason: String!
 }
 
@@ -248,10 +262,17 @@ input UpdateClientInput {
 }
 
 input CreateStoreInput {
-  id: String!
+  email: String!
+  password: String!
+  tel: Int!
+  username: String!
 }
 
 input UpdateStoreInput {
+  email: String
+  password: String
+  tel: Int
+  username: String
   id: String!
 }
 
@@ -318,7 +339,7 @@ input CreateReviewInput {
   rating: Int!
 
   """Review's feedback id"""
-  feedbackId: String!
+  feedback: String!
 
   """Reviewable Id"""
   reviewingId: String!
@@ -329,7 +350,7 @@ input UpdateReviewInput {
   rating: Int
 
   """Review's feedback id"""
-  feedbackId: String
+  feedback: String
 
   """Reviewable Id"""
   reviewingId: String
@@ -337,13 +358,19 @@ input UpdateReviewInput {
 }
 
 input CreateReportInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Reported Email"""
+  report: String!
+
+  """Reporting reason"""
+  reason: String!
 }
 
 input UpdateReportInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Reported Email"""
+  report: String
+
+  """Reporting reason"""
+  reason: String
   id: String!
 }
 

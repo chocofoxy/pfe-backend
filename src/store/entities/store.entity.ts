@@ -33,7 +33,7 @@ export class Store extends User {
   reviews
   
   @Field(() => Boolean)
-  @Prop()
+  @Prop({ default: false })
   approved: Boolean;
 
   @Field(() => Notification, { description: "Reviews"})

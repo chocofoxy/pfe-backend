@@ -5,6 +5,7 @@ import { CreateStoreInput } from './dto/create-store.input';
 import { UpdateStoreInput } from './dto/update-store.input';
 import { Public } from 'src/guards/public.decorator';
 import { Roles } from 'src/guards/roles.decorator';
+import { Role } from 'src/enums';
 
 @Resolver(() => Store)
 export class StoreResolver {
@@ -28,19 +29,19 @@ export class StoreResolver {
     return this.storeService.findOne(id);
   }
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin,Role.store)
   @Mutation(() => Store)
   updateStore(@Args('updateStoreInput') updateStoreInput: UpdateStoreInput) {
     return this.storeService.update(updateStoreInput.id, updateStoreInput);
   }
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin,Role.store)
   @Mutation(() => Store)
   removeStore(@Args('id', { type: () => String }) id: string) {
     return this.storeService.remove(id);
   }
 
-  @Roles('Admin')
+  @Roles(Role.admin)
   @Mutation(() => Store)
   approveStore(@Args('id', { type: () => String }) id: string) {
     return this.storeService.approve(id);

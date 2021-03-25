@@ -6,6 +6,7 @@ import { Review } from 'src/review/entities/review.entity';
 import { Store } from 'src/store/entities/store.entity';
 import { File } from 'src/storage/file.schema'
 import { Category } from 'src/category/entities/category.entity';
+import { Status } from 'src/enums';
 
 @Schema()
 @ObjectType()
@@ -53,6 +54,10 @@ export class Product extends Document {
   @Field(() => Boolean )
   @Prop({ default: true })
   available: boolean
+
+  @Field(() => String)
+  @Prop({ type:String , enum: Status, default: Status.pending })
+  status: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

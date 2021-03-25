@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UsersService } from 'src/user/users.service';
 import { CreateReportInput } from './dto/create-report.input';
 import { UpdateReportInput } from './dto/update-report.input';
 import { Report } from './entities/report.entity';
 
 @Injectable()
 export class ReportService {
-  constructor(@InjectModel(Report.name) private ReportModel: Model<Report>) {}
+  constructor(
+    @InjectModel(Report.name) private ReportModel: Model<Report>,
+    private userService: UsersService
+  ) {}
   
   async create(createReportInput: CreateReportInput) {
-    return await new this.ReportModel(createReportInput).save()
+    const info = await this.userService.findOne(createReportInput.report)
+    return await new this.ReportModel({...createReportInput, reportedType: info.role }).save()
   }
 
   async findAll(): Promise<Report[]> {
