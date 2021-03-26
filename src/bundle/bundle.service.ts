@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductService } from 'src/product/product.service';
@@ -14,8 +14,11 @@ export class BundleService {
     ) {}
   
   async create(createBundleInput: CreateBundleInput) {
-
+    const products = await this.productService.findMany(createBundleInput.products)
+    if ( products.length == createBundleInput.products.length )
     return await new this.BundleModel(createBundleInput).save()
+    else
+    throw new HttpException('One of these products doesn\'t exist',400)
   }
 
   async findAll(): Promise<Bundle[]> {

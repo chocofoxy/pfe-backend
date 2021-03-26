@@ -6,12 +6,13 @@ import { UpdateBundleInput } from './dto/update-bundle.input';
 import { Public } from 'src/guards/public.decorator';
 import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
+import { Role } from 'src/enums';
 
 @Resolver(() => Bundle)
 export class BundleResolver {
   constructor(private readonly bundleService: BundleService) {}
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin,Role.store)
   @Mutation(() => Bundle)
   createBundle(@Args('createBundleInput') createBundleInput: CreateBundleInput, @CurrentUser() user ) {
     return this.bundleService.create({...createBundleInput, store: user.id } as CreateBundleInput);
@@ -29,13 +30,13 @@ export class BundleResolver {
     return this.bundleService.findOne(id);
   }
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin,Role.store)
   @Mutation(() => Bundle)
   updateBundle(@Args('updateBundleInput') updateBundleInput: UpdateBundleInput) {
     return this.bundleService.update(updateBundleInput.id, updateBundleInput);
   }
 
-  @Roles('Admin','Store')
+  @Roles(Role.admin,Role.store)
   @Mutation(() => Bundle)
   removeBundle(@Args('id', { type: () => String }) id: string) {
     return this.bundleService.remove(id);

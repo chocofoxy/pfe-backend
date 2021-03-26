@@ -31,6 +31,10 @@ export class StoreService {
     return await this.StoreModel.findOne({ email: email }).catch(e => { throw new HttpException('this user doesn\'t exist',400) })
   }
 
+  async findById(id: string): Promise<Store> {
+    return await this.StoreModel.findById(id).catch(e => { throw new HttpException('this user doesn\'t exist',400) })
+  }
+
   async update(id: string, store): Promise<Store> {
     return await this.StoreModel.findByIdAndUpdate(id,store).catch(e => { throw new HttpException('this user doesn\'t exist',400) })
   }

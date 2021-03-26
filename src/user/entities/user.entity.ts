@@ -7,7 +7,7 @@ import { Document, ObjectId, Types } from 'mongoose';
 export class User extends Document {
 
   @Field(() => String)
-  _id: ObjectId;
+  _id
 
   @Field(() => String)
   @Prop()

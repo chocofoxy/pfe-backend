@@ -144,25 +144,13 @@ type Client {
   tel: Int!
   Banned: Boolean!
   orders: [Order!]!
+  watchlist: [Product!]!
 }
 
 type AuthResponse {
   token: String!
   role: String!
   user: User!
-}
-
-type Report {
-  _id: String!
-  reporter: User!
-
-  """Review's type of reported item"""
-  reporterType: String!
-  reported: User!
-
-  """Review's type of reported item"""
-  reportedType: String!
-  reason: String!
 }
 
 type Bundle {
@@ -185,6 +173,19 @@ type Bundle {
   reviews: [Review!]!
 }
 
+type Report {
+  _id: String!
+  reporter: User!
+
+  """Review's type of reported item"""
+  reporterType: String!
+  reported: User!
+
+  """Review's type of reported item"""
+  reportedType: String!
+  reason: String!
+}
+
 type Query {
   clients: [Client!]!
   client(id: String!): Client!
@@ -193,17 +194,32 @@ type Query {
   notification(id: String!): Notification!
   products: [Product!]!
   product(id: String!): Product!
+  searchProducts(searchProductInput: SearchProductInput!): [Product!]!
   category(id: String!): Category!
   reviews: [Review!]!
   review(id: String!): Review!
+  bundles: [Bundle!]!
+  bundle(id: String!): Bundle!
   report(id: String!): Report!
   orders: [Order!]!
   order(id: String!): Order!
-  bundles: [Bundle!]!
-  bundle(id: String!): Bundle!
   materials: [Material!]!
   material(id: String!): Material!
   model(id: String!): Model!
+}
+
+input SearchProductInput {
+  """Query in Product's name"""
+  name: String
+
+  """Product min price"""
+  minPrice: Float
+
+  """Product max price"""
+  maxPrice: Float
+
+  """Product's category"""
+  category: String
 }
 
 type Mutation {
@@ -226,18 +242,20 @@ type Mutation {
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
   removeCategory(id: String!): Category!
   approveCategory(id: String!): Category!
-  createReview(createReviewInput: CreateReviewInput!): Review!
+  createReviewStore(createReviewInput: CreateReviewInput!): Review!
+  createReviewProduct(createReviewInput: CreateReviewInput!): Review!
+  createReviewBundle(createReviewInput: CreateReviewInput!): Review!
   updateReview(updateReviewInput: UpdateReviewInput!): Review!
   removeReview(id: String!): Review!
+  createBundle(createBundleInput: CreateBundleInput!): Bundle!
+  updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
+  removeBundle(id: String!): Bundle!
   createReport(createReportInput: CreateReportInput!): Report!
   updateReport(updateReportInput: UpdateReportInput!): Report!
   removeReport(id: String!): Report!
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
   removeOrder(id: String!): Order!
-  createBundle(createBundleInput: CreateBundleInput!): Bundle!
-  updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
-  removeBundle(id: String!): Bundle!
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
   removeMaterial(id: String!): Material!
@@ -357,6 +375,29 @@ input UpdateReviewInput {
   id: String!
 }
 
+input CreateBundleInput {
+  """title of the bundle"""
+  title: String!
+
+  """Array of bundle's products"""
+  products: [String!]!
+
+  """Price of the bundle"""
+  price: Float!
+}
+
+input UpdateBundleInput {
+  """title of the bundle"""
+  title: String
+
+  """Array of bundle's products"""
+  products: [String!]
+
+  """Price of the bundle"""
+  price: Float
+  id: String!
+}
+
 input CreateReportInput {
   """Reported Email"""
   report: String!
@@ -382,29 +423,6 @@ input CreateOrderInput {
 input UpdateOrderInput {
   product: String
   quantity: Int
-  id: String!
-}
-
-input CreateBundleInput {
-  """title of the bundle"""
-  title: String!
-
-  """Array of bundle's products"""
-  products: [String!]!
-
-  """Price of the bundle"""
-  price: Float!
-}
-
-input UpdateBundleInput {
-  """title of the bundle"""
-  title: String
-
-  """Array of bundle's products"""
-  products: [String!]
-
-  """Price of the bundle"""
-  price: Float
   id: String!
 }
 

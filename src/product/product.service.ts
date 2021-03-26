@@ -6,6 +6,7 @@ import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { Product } from './entities/product.entity';
 import { Status } from 'src/enums';
+import { SearchProductInput } from './dto/search-product.input';
 
 @Injectable()
 export class ProductService {
@@ -24,6 +25,18 @@ export class ProductService {
     throw new HttpException('this category doesn\'t exist',400)
   }
 
+  async findMany(ids) {
+    return await this.ProductModel.find({ '_id': { $in: ids } })
+  }
+
+  async search(query: SearchProductInput) {
+    return await this.ProductModel.find({ 
+      price: { $gte: query.minPrice , $lte: query.maxPrice } , 
+      category: { $eq: query.category },
+      name: { $regex: query.name }
+     })
+  }
+  
   async findAll(): Promise<Product[]> {
     return await this.ProductModel.find()
   }

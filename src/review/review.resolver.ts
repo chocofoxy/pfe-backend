@@ -7,6 +7,9 @@ import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
 import { Public } from 'src/guards/public.decorator';
 import { Role } from 'src/enums';
+import { Store } from 'src/store/entities/store.entity';
+import { Product } from 'src/product/entities/product.entity';
+import { Bundle } from 'src/bundle/entities/bundle.entity';
 
 @Resolver(() => Review)
 export class ReviewResolver {
@@ -14,8 +17,20 @@ export class ReviewResolver {
 
   @Roles(Role.client)
   @Mutation(() => Review)
-  createReview(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
-    return this.reviewService.create({...createReviewInput, client: user.id } as CreateReviewInput);
+  createReviewStore(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
+    return this.reviewService.create({...createReviewInput, client: user.id , type: Store.name });
+  }
+
+  @Roles(Role.client)
+  @Mutation(() => Review)
+  createReviewProduct(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
+    return this.reviewService.create({...createReviewInput, client: user.id , type: Product.name });
+  }
+
+  @Roles(Role.client)
+  @Mutation(() => Review)
+  createReviewBundle(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
+    return this.reviewService.create({...createReviewInput, client: user.id , type: Bundle.name });
   }
 
   @Roles(Role.admin)

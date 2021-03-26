@@ -9,6 +9,7 @@ import { UseInterceptors } from '@nestjs/common';
 import { GraphqlFiles } from 'src/storage/file.interceptor';
 import { save } from 'src/storage/storage';
 import { Public } from 'src/guards/public.decorator';
+import { SearchProductInput } from './dto/search-product.input';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -31,6 +32,12 @@ export class ProductResolver {
   @Query(() => Product, { name: 'product' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.productService.findOne(id);
+  }
+
+  @Public()
+  @Query(() => [Product], { name: 'searchProducts' })
+  search(@Args('searchProductInput') searchProductInput: SearchProductInput) {
+    return this.productService.search(searchProductInput);
   }
 
   @Roles('Store','Admin')

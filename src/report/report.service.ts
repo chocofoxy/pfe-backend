@@ -13,7 +13,7 @@ export class ReportService {
     private userService: UsersService
   ) {}
   
-  async create(createReportInput: CreateReportInput) {
+  async create(createReportInput: CreateReportInput ) {
     const info = await this.userService.findOne(createReportInput.report)
     return await new this.ReportModel({...createReportInput, reportedType: info.role }).save()
   }
