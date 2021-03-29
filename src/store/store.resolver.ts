@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Subscription } from '@nestjs/graphql';
 import { StoreService } from './store.service';
 import { Store } from './entities/store.entity';
 import { CreateStoreInput } from './dto/create-store.input';
@@ -6,10 +6,18 @@ import { UpdateStoreInput } from './dto/update-store.input';
 import { Public } from 'src/guards/public.decorator';
 import { Roles } from 'src/guards/roles.decorator';
 import { Role } from 'src/enums';
+import { Order } from 'src/order/entities/order.entity';
+import { Inject } from '@nestjs/common';
+import { PubSub } from 'apollo-server-express';
+import { CurrentUser, getUser } from 'src/guards/current-user.decorator';
 
 @Resolver(() => Store)
 export class StoreResolver {
-  constructor(private readonly storeService: StoreService) {}
+
+  constructor(
+    private readonly storeService: StoreService,
+    @Inject('PUB_SUB') private pubSub: PubSub
+    ) {}
 
   @Public()
   @Mutation(() => Store)
@@ -45,5 +53,17 @@ export class StoreResolver {
   @Mutation(() => Store)
   approveStore(@Args('id', { type: () => String }) id: string) {
     return this.storeService.approve(id);
+  }
+
+  //@Roles(Role.admin)
+  @Subscription(returns => Order,{
+    filter: (payload, variables, context ) => {
+      const user = null //getUser(null,context)
+      console.log(context)
+      return payload.user.id === user.id
+    }
+  })
+  notificationAdded() {
+    return this.pubSub.asyncIterator('notificationAdded');
   }
 }

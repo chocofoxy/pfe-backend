@@ -453,3 +453,7 @@ input UpdateModelInput {
   """Id"""
   id: String!
 }
+
+type Subscription {
+  notificationAdded: Order!
+}

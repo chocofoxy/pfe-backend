@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppService } from './app.service';
@@ -21,7 +21,11 @@ import { ModelModule } from './model/model.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { join } from 'path';
 import { RoleGuard } from './guards/role.guard';
+import { PubSub } from 'apollo-server-express';
+import { JwtService } from '@nestjs/jwt';
+import { JwtStrategy } from './authentication/jwt.strategy';
 
+@Global()
 @Module({
   imports: [
     UsersModule, 
@@ -34,6 +38,8 @@ import { RoleGuard } from './guards/role.guard';
         maxFileSize: 200000000, // 20 MB
         maxFiles: 10
       },
+      context: ({ req, connection }) => connection ? { req: connection.context } : { req },
+      installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
     MongooseModule.forRoot('mongodb+srv://root:root@cluster0.ku0vu.mongodb.net/pfe'),
@@ -59,7 +65,12 @@ import { RoleGuard } from './guards/role.guard';
     {
       provide: APP_GUARD,
       useClass: RoleGuard,
-    }
+    },
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub(),
+    }    
   ],
+  exports:['PUB_SUB']
 })
 export class AppModule {}
