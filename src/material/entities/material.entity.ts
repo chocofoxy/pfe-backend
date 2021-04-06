@@ -16,6 +16,10 @@ export class Material extends Document{
   @Field(() => File, { description: 'File' })
   @Prop()
   file: File;
+
+  @Field(() => File, { description: 'Image' })
+  @Prop()
+  image: File;
 }
 
 export const MaterialSchema = SchemaFactory.createForClass(Material);

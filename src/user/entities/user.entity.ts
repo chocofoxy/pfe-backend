@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
+import  { Notification } from 'src/notification/entities/notification.entity'
 
 @Schema()
 @ObjectType()
@@ -27,7 +28,11 @@ export class User extends Document {
 
   @Field(() => Boolean )
   @Prop({ default: false })
-  Banned: boolean
+  banned: boolean
+
+  @Field(() => Notification, { description: "Reviews"})
+  @Prop({ type: Types.ObjectId , ref: () => Notification })
+  notification
 
 }
 

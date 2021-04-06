@@ -12,10 +12,6 @@ import { Notification } from 'src/notification/entities/notification.entity'
 @ObjectType()
 export class Store extends User {
 
-  @Field(() => File)
-  @Prop()
-  picture: File;
-
   @Field(() => [File])
   @Prop()
   documents: File[];
@@ -36,9 +32,6 @@ export class Store extends User {
   @Prop({ default: false })
   approved: Boolean;
 
-  @Field(() => Notification, { description: "Reviews"})
-  @Prop({ type: Types.ObjectId , ref: () => Notification })
-  notification
 }
 
 export const StoreSchema = SchemaFactory.createForClass(Store);

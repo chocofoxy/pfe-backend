@@ -16,6 +16,7 @@ export class Client extends User {
     @Field(() => [Product])
     @Prop({ type: [{ type: Types.ObjectId , ref: () => Product }] })
     watchlist
+
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);
