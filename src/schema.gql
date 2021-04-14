@@ -194,6 +194,13 @@ type Report {
   reason: String!
 }
 
+type Conversation {
+  """Id"""
+  _id: String!
+  seller: Store!
+  client: Client!
+}
+
 type Query {
   clients: [Client!]!
   client(id: String!): Client!
@@ -214,6 +221,7 @@ type Query {
   materials: [Material!]!
   material(id: String!): Material!
   model(id: String!): Model!
+  conversation(id: Int!): Conversation!
 }
 
 input SearchProductInput {
@@ -270,6 +278,9 @@ type Mutation {
   createModel(createModelInput: CreateModelInput!): Model!
   updateModel(updateModelInput: UpdateModelInput!): Model!
   removeModel(id: String!): Model!
+  createConversation(createConversationInput: CreateConversationInput!): Conversation!
+  updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
+  removeConversation(id: Int!): Conversation!
 }
 
 input CreateClientInput {
@@ -460,6 +471,17 @@ input UpdateModelInput {
 
   """Id"""
   id: String!
+}
+
+input CreateConversationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateConversationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 type Subscription {

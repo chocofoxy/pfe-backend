@@ -22,8 +22,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { join } from 'path';
 import { RoleGuard } from './guards/role.guard';
 import { PubSub } from 'apollo-server-express';
-import { JwtService } from '@nestjs/jwt';
-import { JwtStrategy } from './authentication/jwt.strategy';
+import { ConversationModule } from './conversation/conversation.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Global()
 @Module({
@@ -33,6 +33,7 @@ import { JwtStrategy } from './authentication/jwt.strategy';
     MulterModule.register({
       dest: './upload',
     }),
+    ScheduleModule.forRoot(),
     GraphQLModule.forRoot({
       uploads: {
         maxFileSize: 200000000, // 20 MB
@@ -54,6 +55,7 @@ import { JwtStrategy } from './authentication/jwt.strategy';
     ClientModule,
     MaterialModule,
     ModelModule,
+    ConversationModule,
   ],
   controllers: [AppController],
   providers: [
