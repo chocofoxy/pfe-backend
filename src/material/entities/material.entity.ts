@@ -15,11 +15,11 @@ export class Material extends Document{
 
   @Field(() => File, { description: 'File' })
   @Prop()
-  file: File;
+  texture: File;
 
-  @Field(() => File, { description: 'Image' })
+  @Field(() => String, { description: 'Description' })
   @Prop()
-  image: File;
+  description: string;
 }
 
 export const MaterialSchema = SchemaFactory.createForClass(Material);

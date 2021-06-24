@@ -33,6 +33,12 @@ export class ReviewResolver {
     return this.reviewService.create({...createReviewInput, client: user.id , type: Bundle.name });
   }
 
+  @Roles(Role.client)
+  @Mutation(() => Review)
+  createReview(@Args('createReviewInput') createReviewInput: CreateReviewInput, @CurrentUser() user ) { 
+    return this.reviewService.create({...createReviewInput, client: user.id });
+  }
+
   @Roles(Role.admin)
   @Query(() => [Review], { name: 'reviews' })
   findAll() {
@@ -56,4 +62,17 @@ export class ReviewResolver {
   removeReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.remove(id);
   }
+
+  @Roles(Role.admin)
+  @Mutation(() => Review)
+  approveReview(@Args('id', { type: () => String }) id: string) {
+    return this.reviewService.approve(id);
+  }
+
+  @Roles(Role.admin)
+  @Mutation(() => Review)
+  declineReview(@Args('id', { type: () => String }) id: string) {
+    return this.reviewService.decline(id);
+  }
+
 }

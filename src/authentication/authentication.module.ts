@@ -17,7 +17,7 @@ import { ClientModule } from 'src/client/client.module';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '24h' },
+      //signOptions: { expiresIn: '24h' },
     })
   ],
   providers: [AuthenticationService,JwtStrategy,AuthenticationResolver],

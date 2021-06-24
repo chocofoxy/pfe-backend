@@ -5,6 +5,8 @@ import { CreateClientInput } from './dto/create-client.input';
 import { UpdateClientInput } from './dto/update-client.input';
 import { Public } from 'src/guards/public.decorator';
 import { Roles } from 'src/guards/roles.decorator';
+import { CurrentUser } from 'src/guards/current-user.decorator';
+import { userInfo } from 'os';
 
 @Resolver(() => Client)
 export class ClientResolver {
@@ -29,6 +31,18 @@ export class ClientResolver {
   }
 
   @Roles('Client')
+  @Query(() => Client, { name: 'CurrentClient' })
+  CurrentClient(@CurrentUser() user) {
+    return this.clientService.profile(user.id);
+  }
+
+  @Roles('Client')
+  @Query(() => [String], { name: 'watchlist' })
+  watchlist(@CurrentUser() user) {
+    return this.clientService.watchlist(user.id);
+  }
+
+  @Roles('Client')
   @Mutation(() => Client)
   updateClient(@Args('updateClientInput') updateClientInput: UpdateClientInput) {
     return this.clientService.update(updateClientInput.id, updateClientInput);
@@ -39,4 +53,5 @@ export class ClientResolver {
   removeClient(@Args('id', { type: () => String }) id: string) {
     return this.clientService.remove(id);
   }
+  
 }

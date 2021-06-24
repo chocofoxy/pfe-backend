@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
 import { CurrentUser } from "./current-user.decorator";
-import { IS_PUBLIC_KEY } from "./public.decorator" ;
+import { IS_PUBLIC_KEY } from "./public.decorator";
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
@@ -17,6 +17,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
+
     if (isPublic) {
       return true;
     }
@@ -25,11 +26,21 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
+    const { req, connection } = ctx.getContext();
+
+
+    // if subscriptions/webSockets, let it pass headers from connection.context to passport-jwt
+    let subscriptions = (connection && connection.context && connection.context.headers )
+      ? connection.context
+      : req;
+    //subscriptions = req
+    //console.log(subscriptions)
+    return subscriptions
+
   }
 
   handleRequest(err, user, info) {
-    if (err || !user) {
+    if (err || !user || user.banned ) {
       throw err || new UnauthorizedException();
     }
     return user;

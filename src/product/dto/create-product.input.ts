@@ -17,6 +17,18 @@ export class CreateProductInput {
   images
 
   @Field(() => String, { description: 'Product\'s categroy' })
-  categroy: string
+  category: string
+
+  @Field(() => String )
+  size
+
+  @Field(() => Int , { nullable: true } )
+  quantity
+
+  @Field(() => Float  )
+  weight
+
+  @Field(() => String )
+  material
 
 }

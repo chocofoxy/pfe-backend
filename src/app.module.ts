@@ -24,11 +24,13 @@ import { RoleGuard } from './guards/role.guard';
 import { PubSub } from 'apollo-server-express';
 import { ConversationModule } from './conversation/conversation.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ModelingReqModule } from './modeling-req/modeling-req.module';
+import { StatsModule } from './stats/stats.module';
 
 @Global()
 @Module({
   imports: [
-    UsersModule, 
+    UsersModule,
     AuthenticationModule,
     MulterModule.register({
       dest: './upload',
@@ -39,7 +41,13 @@ import { ScheduleModule } from '@nestjs/schedule';
         maxFileSize: 200000000, // 20 MB
         maxFiles: 10
       },
-      context: ({ req, connection }) => connection ? { req: connection.context } : { req },
+      subscriptions: {
+        keepAlive: 5000,
+      },
+      context: ({ req, connection }) => /*{
+        console.log(connection.context) ; */
+        connection ? { req: { headers: {...connection.context , 'authorization': connection.context["Authorization"] || req.headers["authorization"]  } } } : { req },
+        //return connection },
       installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
@@ -56,6 +64,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     MaterialModule,
     ModelModule,
     ConversationModule,
+    ModelingReqModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -71,8 +81,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     {
       provide: 'PUB_SUB',
       useValue: new PubSub(),
-    }    
+    }
   ],
-  exports:['PUB_SUB']
+  exports: ['PUB_SUB']
 })
-export class AppModule {}
+export class AppModule { }

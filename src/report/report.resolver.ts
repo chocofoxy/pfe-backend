@@ -6,6 +6,7 @@ import { UpdateReportInput } from './dto/update-report.input';
 import { Roles } from 'src/guards/roles.decorator';
 import { Role } from 'src/enums';
 import { CurrentUser } from 'src/guards/current-user.decorator';
+import { Public } from 'src/guards/public.decorator';
 
 @Resolver(() => Report)
 export class ReportResolver {
@@ -14,10 +15,11 @@ export class ReportResolver {
   @Roles(Role.admin,Role.client,Role.store)
   @Mutation(() => Report)
   createReport(@Args('createReportInput') createReportInput: CreateReportInput,@CurrentUser() user) {
-    return this.reportService.create({...createReportInput, reporter: user.id , reporterType: user.role } as CreateReportInput);
+    return this.reportService.create({...createReportInput, reporter: user.id , reporterType: user.role  } as CreateReportInput);
   }
 
-  @Query(() => [Report], { name: 'report' })
+  @Public()
+  @Query(() => [Report], { name: 'reports' })
   findAll() {
     return this.reportService.findAll();
   }

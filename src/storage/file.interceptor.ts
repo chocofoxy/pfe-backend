@@ -1,31 +1,26 @@
 import { Observable } from 'rxjs';
-import { NestInterceptor, Optional, ExecutionContext, mixin, CallHandler, Inject,} from '@nestjs/common';
+import { NestInterceptor, Optional, ExecutionContext, mixin, CallHandler, Inject, } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { save } from './storage';
+import { GraphQLUpload } from 'apollo-server-express';
 
-interface IField {
-  name: string;
-  options?: any;
-}
 
-export function GraphqlFiles(uploadFields: IField[], localOptions?: any ,) {
+export function GraphqlFiles(inputType) {
   class MixinInterceptor implements NestInterceptor {
-    options: any = {};
-
-    constructor(@Optional() options: any = {}) {
-      this.options = { ...options, ...localOptions };
-    }
-
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
       {
         const ctx = GqlExecutionContext.create(context);
-        const args = ctx.getArgs() 
-        for ( let field of uploadFields ) {
-          if (field.options.array)
-          await args[this.options.input][field.name].map((file) => save(file).then( (f) => file = f ))
-          else
-          args[this.options.input][field.name] = save( args[this.options.input][field.name]).then((file) => file )
-        }
+        const input = ctx.getArgs()[inputType]
+        Object.keys(input).map(async key => {
+          if (input[key] instanceof Promise) {
+            await save(input[key]).then((f) => input[key] = f)
+          }
+          if (input[key] instanceof Array ) {
+            for (let file of input[key]) {
+              await save(file).then((f) => file = f).catch( e => '')
+            }
+          }
+        })
         return next.handle()
       }
     }

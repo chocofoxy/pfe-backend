@@ -6,7 +6,10 @@ export class CreateOrderInput {
   @Field(() => String)
   product: string
 
-  @Field(() => Int )
-  quantity: number
+  @Field(() => String ,{ nullable: null , defaultValue: null})
+  material
+
+  @Field(() => Int ,{ defaultValue: 1 })
+  quantity
 
 }

@@ -15,7 +15,7 @@ export class BundleResolver {
   @Roles(Role.admin,Role.store)
   @Mutation(() => Bundle)
   createBundle(@Args('createBundleInput') createBundleInput: CreateBundleInput, @CurrentUser() user ) {
-    return this.bundleService.create({...createBundleInput, store: user.id } as CreateBundleInput);
+    return this.bundleService.create({...createBundleInput, store: user.id });
   }
 
   @Public()

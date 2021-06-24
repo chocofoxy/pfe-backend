@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
+import { ObjectType, Field, Int, Float, createUnionType } from '@nestjs/graphql';
 import { SchemaFactory, Schema, Prop } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { Product } from 'src/product/entities/product.entity';
@@ -20,7 +20,7 @@ export class Bundle extends Document {
   @Prop({ type: [{ type: Types.ObjectId , ref: () => Product }] })
   products
 
-  @Field(() => Store , { description: 'undle\'s store' })
+  @Field(() => Store , { description: 'Bundle\'s store' })
   @Prop({ type: Types.ObjectId , ref: () => Store })
   store
 
@@ -28,8 +28,12 @@ export class Bundle extends Document {
   @Prop()
   price: Number
 
+  @Field(() => Float, { description: 'Bundle rating' })
+  @Prop({ default: 0 })
+  rating: number;
+
   @Field(() => [Review], { description: "Reviews"})
-  @Prop({ type: [{ type: Types.ObjectId , ref: () => Review }]})
+  @Prop({ type: [{ type: Types.ObjectId , ref: () => Review }] , default: [] })
   reviews
 
 }

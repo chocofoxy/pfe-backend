@@ -6,16 +6,21 @@ import { UpdateMaterialInput } from './dto/update-material.input';
 import { Public } from 'src/guards/public.decorator';
 import { UseInterceptors } from '@nestjs/common';
 import { GraphqlFiles } from 'src/storage/file.interceptor';
+import { save } from 'src/storage/storage';
+import { CurrentUser } from 'src/guards/current-user.decorator';
+import { Role } from 'src/enums';
+import { Roles } from 'src/guards/roles.decorator';
 
-@Public()
 @Resolver(() => Material)
 export class MaterialResolver {
   constructor(private readonly materialService: MaterialService) {}
 
   //@UseInterceptors(GraphqlFiles([{ name: "file" }],{ input: "createMaterialInput" }))
+  @Roles(Role.store)
   @Mutation(() => Material)
-  async createMaterial(@Args('createMaterialInput') createMaterialInput: CreateMaterialInput) {
-    return this.materialService.create(createMaterialInput);
+  async createMaterial(@Args('createMaterialInput') createMaterialInput: CreateMaterialInput , @CurrentUser() user ) {
+    createMaterialInput.texture = await save( createMaterialInput.texture).then( f=> f )
+    return this.materialService.create(createMaterialInput, user.id);
   }
 
   @Query(() => [Material], { name: 'materials' })

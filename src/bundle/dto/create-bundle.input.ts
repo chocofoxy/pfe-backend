@@ -1,3 +1,4 @@
+import { mixin } from '@nestjs/common';
 import { InputType, Int, Field, Float } from '@nestjs/graphql';
 
 @InputType()

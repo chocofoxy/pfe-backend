@@ -14,12 +14,16 @@ export class ReportService {
   ) {}
   
   async create(createReportInput: CreateReportInput ) {
-    const info = await this.userService.findOne(createReportInput.report)
-    return await new this.ReportModel({...createReportInput, reportedType: info.role }).save()
+    const info = await this.userService.findOne(createReportInput.reported)
+    if ( info ) {
+      createReportInput.reported =  info.user._id
+      return await new this.ReportModel({...createReportInput , reportedType: info.role }).save()
+    }
   }
+   
 
   async findAll(): Promise<Report[]> {
-    return await this.ReportModel.find()
+    return await this.ReportModel.find().populate(['reported','reporter'])
   }
 
   async findOne(id: string): Promise<Report> {

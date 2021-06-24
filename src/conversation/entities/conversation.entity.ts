@@ -4,7 +4,25 @@ import { Document, ObjectId, Types } from 'mongoose';
 import { Client } from 'src/client/entities/client.entity';
 import { Store } from 'src/store/entities/store.entity';
 
-@Schema()
+@ObjectType()
+export class Message {
+  @Field(() => String)
+  user: String
+
+  @Field(() => String)
+  content: string
+}
+
+@ObjectType()
+export class MessageEvent {
+  @Field(() => String)
+  conversation: String
+
+  @Field(() => Message)
+  message: Message
+}
+
+@Schema({ useNestedStrict: false})
 @ObjectType()
 export class Conversation extends Document {
 
@@ -17,20 +35,15 @@ export class Conversation extends Document {
 
   @Field(() => Client)
   @Prop({ type: Types.ObjectId , ref: () => Client })
-  client
-/*
-  @Field(() => [Message])
-  @Prop()
-  messages: Message[];*/
-}
-/*
-@ObjectType()
-export class Message {
-  @Field(() => Boolean)
-  client: Boolean
+  client;
 
-  @Field(() => String)
-  content: string
-}*/
+  @Field(() => Message , { nullable: true})
+  @Prop({ default: null })
+  lastMessage: Message
+
+  @Field(() => [Message])
+  @Prop({ default: []})
+  messages: Message[];
+}
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

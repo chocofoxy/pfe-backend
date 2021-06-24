@@ -6,15 +6,10 @@ import { GraphqlFiles } from 'src/storage/file.interceptor';
 export class CreateModelInput {
 
   @Field(() => String)
-  name: string;
+  product: string;
 
-  @Field(() => Float)
-  price: number;
 
   @Field(() => GraphQLUpload)
   mesh;
 
-  @Field(() => String)
-  description: string;
-  
 }

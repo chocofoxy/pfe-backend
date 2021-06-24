@@ -6,22 +6,39 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
 import { Public } from 'src/guards/public.decorator';
-import { Role } from 'src/enums';
+import { Role, Status } from 'src/enums';
+import { save } from 'src/storage/storage';
+import { UseInterceptors } from '@nestjs/common';
+import { GraphqlFiles } from 'src/storage/file.interceptor';
 
 @Resolver(() => Category)
 export class CategoryResolver {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Roles(Role.admin, Role.store)
+  @Roles(Role.admin)
   @Mutation(() => Category)
-  createCategory(@Args('createCategoryInput') createCategoryInput: CreateCategoryInput, @CurrentUser() user) {
-    return this.categoryService.create({...createCategoryInput , approved: user.role == Role.admin });
+  async createCategory(@Args('createCategoryInput') createCategoryInput: CreateCategoryInput, @CurrentUser() user) {
+    createCategoryInput.icon = await save(createCategoryInput.icon).then( f => f )
+    createCategoryInput.image = await save(createCategoryInput.image).then( f => f )
+    return this.categoryService.create({...createCategoryInput , status: Status.confirmed });
+  }
+
+  @Roles(Role.store)
+  @Mutation(() => Category)
+  async requestCategory(@Args('name', { type: () => String }) name , @CurrentUser() user) {
+    return this.categoryService.create({ name , status: Status.pending });
   }
 
   @Public()
-  @Query(() => [Category], { name: 'category' })
+  @Query(() => [Category], { name: 'categories' })
   findAll() {
     return this.categoryService.findAll();
+  }
+
+  @Roles(Role.admin)
+  @Query(() => [Category], { name: 'categoriesAdmin' })
+  findAllForAdmin() {
+    return this.categoryService.findAllForAdmin();
   }
 
   @Public()
@@ -31,8 +48,18 @@ export class CategoryResolver {
   }
 
   @Roles(Role.admin)
+  @Query(() => [Category], { name: 'AllCategories' })
+  findAllStatus() {
+    return this.categoryService.findAllStatus();
+  }
+
+  @Roles(Role.admin)
   @Mutation(() => Category)
-  updateCategory(@Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput) {
+  async updateCategory(@Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput) {
+    if ( updateCategoryInput.icon)
+    updateCategoryInput.icon = await save(updateCategoryInput.icon).then( f => f )
+    if ( updateCategoryInput.image )
+    updateCategoryInput.image = await save(updateCategoryInput.image).then( f => f )
     return this.categoryService.update(updateCategoryInput.id, updateCategoryInput);
   }
 
@@ -46,6 +73,12 @@ export class CategoryResolver {
   @Mutation(() => Category)
   approveCategory(@Args('id', { type: () => String }) id: string) {
     return this.categoryService.approve(id);
+  }
+
+  @Public()
+  @Query(() => [Category],)
+  discover() {
+    return this.categoryService.discover();
   }
 
 }

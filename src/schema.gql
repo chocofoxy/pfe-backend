@@ -2,11 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Notification {
-  _id: String!
-  events: [String!]!
-}
-
 type File {
   originalName: String!
   filename: String!
@@ -22,10 +17,10 @@ type Material {
   color: String!
 
   """File"""
-  file: File!
+  texture: File!
 
-  """Image"""
-  image: File!
+  """Description"""
+  description: String!
 }
 
 type Model {
@@ -39,6 +34,25 @@ type Model {
   materials: [Material!]!
 }
 
+type Message {
+  user: String!
+  content: String!
+}
+
+type MessageEvent {
+  conversation: String!
+  message: Message!
+}
+
+type Conversation {
+  """Id"""
+  _id: String!
+  seller: Store!
+  client: Client!
+  lastMessage: Message
+  messages: [Message!]!
+}
+
 type User {
   _id: String!
   username: String!
@@ -46,9 +60,29 @@ type User {
   password: String!
   tel: Int!
   banned: Boolean!
+  EmailConfirmation: Boolean!
 
-  """Reviews"""
+  """Notification"""
   notification: Notification!
+
+  """Conversations"""
+  conversations: [Conversation!]!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ModelingReq {
+  _id: String!
+  dimensions: String!
+  discription: String!
+  model3D: File
+  refrences: [File!]!
+  status: String!
+  createdAt: DateTime!
 }
 
 type Store {
@@ -58,20 +92,63 @@ type Store {
   password: String!
   tel: Int!
   banned: Boolean!
+  EmailConfirmation: Boolean!
 
-  """Reviews"""
+  """Notification"""
   notification: Notification!
+
+  """Conversations"""
+  conversations: [Conversation!]!
+  createdAt: DateTime!
   documents: [File!]!
 
   """products"""
-  products: [Product!]!
+  products: [Product!]
+
+  """Modeling requests"""
+  requests: [ModelingReq!]
+
+  """bundles"""
+  bundles: [Bundle!]
 
   """orders"""
-  orders: [Order!]!
+  orders: [Order!]
 
   """Reviews"""
   reviews: [Review!]!
+
+  """Rating"""
+  rating: Float!
   approved: Boolean!
+
+  """Store's logo """
+  logo: File!
+
+  """Store's logo """
+  subscribed: Boolean!
+}
+
+type Bundle {
+  """Id of the bundle"""
+  _id: String!
+
+  """title of the bundle"""
+  title: String!
+
+  """Array of bundle's products"""
+  products: [Product!]!
+
+  """Bundle's store"""
+  store: Store!
+
+  """Price of the bundle"""
+  price: Float!
+
+  """Bundle rating"""
+  rating: Float!
+
+  """Reviews"""
+  reviews: [Review!]!
 }
 
 type Review {
@@ -82,21 +159,32 @@ type Review {
   client: Client!
 
   """Review's rating"""
-  rating: Int!
+  rating: Float!
 
   """Review's feedback"""
   feedback: String!
 
   """Review's feedback"""
-  reviewing: Client!
+  reviewing: Reviewable
 
   """Review's type of reported item"""
   type: String!
+
+  """Review's type of reported item"""
+  status: String!
+
+  """Review's date"""
+  createdAt: DateTime!
 }
+
+union Reviewable = Bundle | Store | Product
 
 type Category {
   _id: String!
   name: String!
+  image: File
+  icon: File
+  description: String
   status: String!
   products: [Product!]!
 }
@@ -111,6 +199,9 @@ type Product {
   """Product price"""
   price: Float!
 
+  """Product rating"""
+  rating: Float!
+
   """Product description"""
   description: String!
 
@@ -118,7 +209,7 @@ type Product {
   images: [File!]!
 
   """Product's model"""
-  model3d: Model!
+  model3d: Model
 
   """Product's category"""
   category: Category!
@@ -129,16 +220,13 @@ type Product {
   """Reviews"""
   reviews: [Review!]!
   quantity: Int
+  size: String
+  weight: Float
+  material: String
   available: Boolean!
   status: String!
-}
-
-type Order {
-  _id: String!
-  product: Product!
-  client: Client!
-  quantity: Int!
-  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Client {
@@ -148,11 +236,61 @@ type Client {
   password: String!
   tel: Int!
   banned: Boolean!
+  EmailConfirmation: Boolean!
 
-  """Reviews"""
+  """Notification"""
   notification: Notification!
-  orders: [Order!]!
+
+  """Conversations"""
+  conversations: [Conversation!]!
+  createdAt: DateTime!
+  orders: [Order!]
   watchlist: [Product!]!
+  image: File!
+}
+
+type Order {
+  _id: String!
+  itemOrdred: OrderItem!
+  item: OrderItem!
+  type: String!
+  client: Client!
+  quantity: Int!
+  status: String!
+  reviewed: Boolean!
+  material: Material
+  createdAt: DateTime!
+}
+
+union OrderItem = Product | Bundle
+
+type Notification {
+  _id: String!
+  events: [NotificationEvent!]
+}
+
+type NotificationEvent {
+  message: String!
+  type: String!
+  item: Order!
+}
+
+type Admin {
+  _id: String!
+  username: String!
+  email: String!
+  password: String!
+  tel: Int!
+  banned: Boolean!
+  EmailConfirmation: Boolean!
+
+  """Notification"""
+  notification: Notification!
+
+  """Conversations"""
+  conversations: [Conversation!]!
+  createdAt: DateTime!
+  role: String!
 }
 
 type AuthResponse {
@@ -161,67 +299,68 @@ type AuthResponse {
   user: User!
 }
 
-type Bundle {
-  """Id of the bundle"""
-  _id: String!
-
-  """title of the bundle"""
-  title: String!
-
-  """Array of bundle's products"""
-  products: [Product!]!
-
-  """undle's store"""
-  store: Store!
-
-  """Price of the bundle"""
-  price: Float!
-
-  """Reviews"""
-  reviews: [Review!]!
-}
-
 type Report {
   _id: String!
-  reporter: User!
+  reporter: ReportParty!
 
   """Review's type of reported item"""
   reporterType: String!
-  reported: User!
+  reported: ReportParty!
 
   """Review's type of reported item"""
   reportedType: String!
   reason: String!
 }
 
-type Conversation {
-  """Id"""
-  _id: String!
-  seller: Store!
-  client: Client!
+union ReportParty = Client | Store
+
+type Stat {
+  totalOrders: Int!
+  totalProducts: Int!
+  totalReviews: Int!
+  totalClients: Int!
+  totalStores: Int!
 }
 
 type Query {
+  mods: [Admin!]!
   clients: [Client!]!
   client(id: String!): Client!
-  notification(id: String!): Notification!
+  CurrentClient: Client!
+  watchlist: [String!]!
+  getNotification: Notification!
   stores: [Store!]!
+  storesAll: [Store!]!
   store(id: String!): Store!
+  currentStore: Store!
+  approvedProduct: Store!
   products: [Product!]!
-  product(id: String!): Product!
+  allProducts: [Product!]!
+  product(id: String!): Product
+  productForInvetory(id: String!): Product
+  productForAdmin(id: String!): Product
   searchProducts(searchProductInput: SearchProductInput!): [Product!]!
+  bestSelling: [Product!]!
+  categories: [Category!]!
+  categoriesAdmin: [Category!]!
   category(id: String!): Category!
-  reviews: [Review!]!
-  review(id: String!): Review!
-  bundles: [Bundle!]!
-  bundle(id: String!): Bundle!
-  report(id: String!): Report!
+  AllCategories: [Category!]!
+  discover: [Category!]!
   orders: [Order!]!
   order(id: String!): Order!
+  myOrders: [Order!]!
+  bundles: [Bundle!]!
+  bundle(id: String!): Bundle!
+  reviews: [Review!]!
+  review(id: String!): Review!
+  reports: [Report!]!
+  report(id: String!): Report!
   materials: [Material!]!
   material(id: String!): Material!
   model(id: String!): Model!
-  conversation(id: Int!): Conversation!
+  conversation(id: String!): Conversation
+  modelingReqs: [ModelingReq!]!
+  stats: Stat!
 }
 
 input SearchProductInput {
@@ -229,58 +368,90 @@ input SearchProductInput {
   name: String
 
   """Product min price"""
-  minPrice: Float
+  minPrice: Float = 0.01
 
   """Product max price"""
-  maxPrice: Float
+  maxPrice: Float = 10000000.01
 
   """Product's category"""
   category: String
+
+  """Product's store"""
+  store: String
 }
 
 type Mutation {
+  banToggel(email: String!): User!
+  updateProfile(UpdateUserInput: UpdateUserInput!): User!
+  addMod(CreateModInput: CreateModInput!): User!
   createClient(createClientInput: CreateClientInput!): Client!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   removeClient(id: String!): Client!
-  updateNotification(updateNotificationInput: UpdateNotificationInput!): Notification!
-  removeNotification(id: String!): Notification!
   createStore(createStoreInput: CreateStoreInput!): Store!
   updateStore(updateStoreInput: UpdateStoreInput!): Store!
   removeStore(id: String!): Store!
   approveStore(id: String!): Store!
+  subscribeToPremium: Store!
   login(authInfo: AuthInfo!): AuthResponse
   signupStore(informations: CreateStoreInput!): User!
   signupClient(informations: CreateClientInput!): User!
+  activateAccount(code: String!, email: String!): String!
   createProduct(createProductInput: CreateProductInput!): Product!
+  changeProductStatus(operation: Boolean!, id: String!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: String!): Product!
+  addToWatchlist(id: String): Product!
+  removeFromWatchlist(id: String!): Product!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  requestCategory(name: String!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
   removeCategory(id: String!): Category!
   approveCategory(id: String!): Category!
-  createReviewStore(createReviewInput: CreateReviewInput!): Review!
-  createReviewProduct(createReviewInput: CreateReviewInput!): Review!
-  createReviewBundle(createReviewInput: CreateReviewInput!): Review!
-  updateReview(updateReviewInput: UpdateReviewInput!): Review!
-  removeReview(id: String!): Review!
-  createBundle(createBundleInput: CreateBundleInput!): Bundle!
-  updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
-  removeBundle(id: String!): Bundle!
-  createReport(createReportInput: CreateReportInput!): Report!
-  updateReport(updateReportInput: UpdateReportInput!): Report!
-  removeReport(id: String!): Report!
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
   removeOrder(id: String!): Order!
+  cancelOrder(id: String!): Order!
+  approveOrder(id: String!): Order!
+  createBundle(createBundleInput: CreateBundleInput!): Bundle!
+  updateBundle(updateBundleInput: UpdateBundleInput!): Bundle!
+  removeBundle(id: String!): Bundle!
+  createReviewStore(createReviewInput: CreateReviewInput!): Review!
+  createReviewProduct(createReviewInput: CreateReviewInput!): Review!
+  createReviewBundle(createReviewInput: CreateReviewInput!): Review!
+  createReview(createReviewInput: CreateReviewInput!): Review!
+  updateReview(updateReviewInput: UpdateReviewInput!): Review!
+  removeReview(id: String!): Review!
+  approveReview(id: String!): Review!
+  declineReview(id: String!): Review!
+  createReport(createReportInput: CreateReportInput!): Report!
+  updateReport(updateReportInput: UpdateReportInput!): Report!
+  removeReport(id: String!): Report!
   createMaterial(createMaterialInput: CreateMaterialInput!): Material!
   updateMaterial(updateMaterialInput: UpdateMaterialInput!): Material!
   removeMaterial(id: String!): Material!
   createModel(createModelInput: CreateModelInput!): Model!
   updateModel(updateModelInput: UpdateModelInput!): Model!
   removeModel(id: String!): Model!
-  createConversation(createConversationInput: CreateConversationInput!): Conversation!
-  updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
-  removeConversation(id: Int!): Conversation!
+  sendMessage(MessageConversationInput: MessageConversationInput!): Conversation!
+  createModelingReq(createModelingReqInput: CreateModelingReqInput!): ModelingReq!
+  approveModelingReq(updateModelingReqInput: ApproveModelingReqInput!): ModelingReq!
+  declineModelingReq(id: String!): ModelingReq!
+  removeModelingReq(id: String!): ModelingReq!
+}
+
+input UpdateUserInput {
+  username: String
+  tel: Int
+  image: Upload
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateModInput {
+  email: String!
+  password: String!
+  username: String!
 }
 
 input CreateClientInput {
@@ -288,6 +459,8 @@ input CreateClientInput {
   password: String!
   tel: Int!
   username: String!
+  files: [Upload!]
+  image: Upload!
 }
 
 input UpdateClientInput {
@@ -295,10 +468,8 @@ input UpdateClientInput {
   password: String
   tel: Int
   username: String
-  id: String!
-}
-
-input UpdateNotificationInput {
+  files: [Upload!]
+  image: Upload
   id: String!
 }
 
@@ -307,6 +478,8 @@ input CreateStoreInput {
   password: String!
   tel: Int!
   username: String!
+  files: [Upload!]
+  image: Upload!
 }
 
 input UpdateStoreInput {
@@ -314,6 +487,8 @@ input UpdateStoreInput {
   password: String
   tel: Int
   username: String
+  files: [Upload!]
+  image: Upload
   id: String!
 }
 
@@ -336,11 +511,12 @@ input CreateProductInput {
   images: [Upload!]!
 
   """Product's categroy"""
-  categroy: String!
+  category: String!
+  size: String!
+  quantity: Int
+  weight: Float!
+  material: String!
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input UpdateProductInput {
   """Product name"""
@@ -356,41 +532,40 @@ input UpdateProductInput {
   images: [Upload!]
 
   """Product's categroy"""
-  categroy: String
+  category: String
+  size: String
+  quantity: Int
+  weight: Float
+  material: String
   id: String!
+  deletedImages: [Int!]
 }
 
 input CreateCategoryInput {
   name: String!
-  approved: Boolean!
+  description: String!
+  image: Upload!
+  icon: Upload!
 }
 
 input UpdateCategoryInput {
-  name: String
-  approved: Boolean
   id: String!
+  name: String!
+  description: String!
+  image: Upload
+  icon: Upload
 }
 
-input CreateReviewInput {
-  """Review's rating"""
-  rating: Int!
-
-  """Review's feedback id"""
-  feedback: String!
-
-  """Reviewable Id"""
-  reviewingId: String!
+input CreateOrderInput {
+  product: String!
+  material: String = null
+  quantity: Int = 1
 }
 
-input UpdateReviewInput {
-  """Review's rating"""
-  rating: Int
-
-  """Review's feedback id"""
-  feedback: String
-
-  """Reviewable Id"""
-  reviewingId: String
+input UpdateOrderInput {
+  product: String
+  material: String = null
+  quantity: Int = 1
   id: String!
 }
 
@@ -406,20 +581,42 @@ input CreateBundleInput {
 }
 
 input UpdateBundleInput {
+  """Id of the bundle"""
+  id: String!
+
   """title of the bundle"""
   title: String
 
-  """Array of bundle's products"""
-  products: [String!]
-
   """Price of the bundle"""
   price: Float
+}
+
+input CreateReviewInput {
+  """Review's rating"""
+  rating: Float!
+
+  """Review's feedback id"""
+  feedback: String!
+
+  """Reviewable Id"""
+  reviewingId: String!
+}
+
+input UpdateReviewInput {
+  """Review's rating"""
+  rating: Float
+
+  """Review's feedback id"""
+  feedback: String
+
+  """Reviewable Id"""
+  reviewingId: String
   id: String!
 }
 
 input CreateReportInput {
   """Reported Email"""
-  report: String!
+  reported: String!
 
   """Reporting reason"""
   reason: String!
@@ -427,63 +624,65 @@ input CreateReportInput {
 
 input UpdateReportInput {
   """Reported Email"""
-  report: String
+  reported: String
 
   """Reporting reason"""
   reason: String
   id: String!
 }
 
-input CreateOrderInput {
-  product: String!
-  quantity: Int!
-}
-
-input UpdateOrderInput {
-  product: String
-  quantity: Int
-  id: String!
-}
-
 input CreateMaterialInput {
+  product: String!
+  model: String!
   color: String!
-  file: Upload!
+  description: String!
+  texture: Upload!
 }
 
 input UpdateMaterialInput {
+  product: String
+  model: String
   color: String
-  file: Upload
+  description: String
+  texture: Upload
   id: String!
 }
 
 input CreateModelInput {
-  name: String!
-  price: Float!
+  product: String!
   mesh: Upload!
-  description: String!
 }
 
 input UpdateModelInput {
-  name: String
-  price: Float
-  mesh: Upload
-  description: String
+  product: String
+  mesh: Upload!
+
+  """Id"""
+  productId: String!
 
   """Id"""
   id: String!
 }
 
-input CreateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input MessageConversationInput {
+  to: String!
+  message: String!
 }
 
-input UpdateConversationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input CreateModelingReqInput {
+  dimensions: String!
+  discription: String!
+  refrences: [Upload!]!
+}
+
+input ApproveModelingReqInput {
+  id: String!
+  file: Upload!
 }
 
 type Subscription {
-  notificationAdded: Order!
+  notificationAdded: NotificationEvent!
+  adminNotification: NotificationEvent!
+  newConversation: Conversation!
+  newMessage: MessageEvent!
 }
