@@ -37,10 +37,10 @@ import { StatsModule } from './stats/stats.module';
     }),
     ScheduleModule.forRoot(),
     GraphQLModule.forRoot({
-      /*uploads: {
-        maxFileSize: 200000000, // 20 MB
+      uploads: {
+        maxFileSize: 2000000000, // 20 MB
         maxFiles: 10
-      },*/
+      },
       subscriptions: {
         keepAlive: 5000,
       },

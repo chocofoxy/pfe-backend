@@ -11,8 +11,8 @@ export const save = async ( file ): Promise<any> => {
         path: `./${dest}/${name}`,
         url: `/${name}` 
      }
-    return await new Promise(async (resolve, reject) =>
-       await createReadStream()
+    return  new Promise(async (resolve, reject) =>
+        createReadStream()
             .pipe(createWriteStream(newFile.path).on('error', () => reject(false)))
             .on('finish', () => resolve(newFile))
             .on('error', () => reject(false))
