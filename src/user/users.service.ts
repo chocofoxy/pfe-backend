@@ -38,12 +38,12 @@ export class UsersService {
       await this.create({ email:"tynassit@gmail.com" , password: "tynassit123456789" } as CreateUserInput)
     }
     this.transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "smtp-relay.sendinblue.com",
       port: 587,
       secure: false, 
       auth: {
-        user: 'tunisia.blackhat@gmail.com',
-        pass: '22041998007' 
+        user: 'hamzus007jouini@gmail.com',
+        pass: '03aFNZ4VkqXYz2S5' 
       },
     });
   }
