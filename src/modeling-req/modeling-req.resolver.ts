@@ -35,7 +35,7 @@ export class ModelingReqResolver {
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.modelingReqService.findOne(id);
   }*/
-
+  @Roles(Role.admin,Role.moderator)
   @Mutation(() => ModelingReq)
   async approveModelingReq(@Args('updateModelingReqInput') updateModelingReqInput: ApproveModelingReqInput) {
     //console.log('dfdf')

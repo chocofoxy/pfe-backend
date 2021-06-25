@@ -7,6 +7,7 @@ import { Public } from 'src/guards/public.decorator';
 import { Roles } from 'src/guards/roles.decorator';
 import { CurrentUser } from 'src/guards/current-user.decorator';
 import { userInfo } from 'os';
+import { Role } from 'src/enums';
 
 @Resolver(() => Client)
 export class ClientResolver {
@@ -18,7 +19,7 @@ export class ClientResolver {
     return this.clientService.create(createClientInput);
   }
 
-  @Roles('Admin')
+  @Roles('Admin',Role.moderator)
   @Query(() => [Client], { name: 'clients' })
   findAll() {
     return this.clientService.findAll();

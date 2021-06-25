@@ -63,13 +63,13 @@ export class ReviewResolver {
     return this.reviewService.remove(id);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin,Role.moderator)
   @Mutation(() => Review)
   approveReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.approve(id);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin,Role.moderator)
   @Mutation(() => Review)
   declineReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.decline(id);

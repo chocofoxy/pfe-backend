@@ -34,7 +34,7 @@ export class ProductResolver {
     return this.productService.findAll();
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin,Role.moderator)
   @Query(() => [Product], { name: 'allProducts' })
   findAllStatus() {
     return this.productService.findAllStatus();
@@ -52,13 +52,13 @@ export class ProductResolver {
     return this.productService.findOneForInvetory(id,user.id);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin,Role.moderator)
   @Query(() => Product, { name: 'productForAdmin', nullable: true })
   findOneForAdmin(@Args('id', { type: () => String }) id: string , @CurrentUser() user) {
     return this.productService.findOneAdmin(id);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin,Role.moderator)
   @Mutation(() => Product)
   changeProductStatus(@Args('id', { type: () => String }) id: string , @Args('operation', { type: () => Boolean }) operation: Boolean ) {
     if ( operation )
@@ -113,5 +113,5 @@ export class ProductResolver {
   bestSelling() {
     return this.productService.bestSelling();
   }
-  
+
 }
