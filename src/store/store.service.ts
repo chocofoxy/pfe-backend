@@ -35,7 +35,7 @@ export class StoreService {
   }
 
   async findAll(): Promise<Store[]> {
-    return await this.StoreModel.find().populate(['products','bundles','reviews'])
+    return await this.StoreModel.find().populate(['products','bundles','reviews','orders'])
   }
 
   async findAllApproved(): Promise<Store[]> {
